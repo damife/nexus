@@ -25,12 +25,10 @@ pids/
 *.pid.lock
 
 # Environment variables
-
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-server/.env
 server/.env.local
 
 # IDE and Editor files
