@@ -1,0 +1,145 @@
+.admin-landing {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.landing-header {
+  margin-bottom: 1rem;
+}
+
+.landing-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.landing-header h1 i {
+  color: var(--secondary);
+  font-size: 2.5rem;
+}
+
+.landing-header p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-stat-card {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+  position: relative;
+}
+
+.stat-card-link:hover .admin-stat-card {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-arrow {
+  position: absolute;
+  right: 1.5rem;
+  color: var(--text-light);
+  font-size: 1.25rem;
+  transition: all 0.2s;
+}
+
+.stat-card-link:hover .stat-arrow {
+  color: var(--secondary);
+  transform: translateX(4px);
+}
+
+.admin-quick-actions {
+  margin-top: 1rem;
+}
+
+.admin-quick-actions h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.admin-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-action-card {
+  background: var(--bg-primary);
+  padding: 2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  color: var(--secondary);
+}
+
+.action-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+}
+
+.admin-action-card:hover .action-icon {
+  transform: scale(1.1);
+}
+
+.admin-action-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-action-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-stats-grid,
+  .admin-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

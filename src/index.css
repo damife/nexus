@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    font-family: 'Courier New', 'Courier', monospace;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 font-mono;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 inline-flex items-center gap-2 font-mono;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-900 border border-gray-300 hover:bg-gray-200;
+  }
+  
+  select {
+    @apply w-full p-3 border border-gray-300 rounded-lg text-base font-mono bg-white text-gray-900 transition-all;
+  }
+  
+  select:focus {
+    @apply outline-none border-blue-600 ring-2 ring-blue-200;
+  }
+}
+
+@layer utilities {
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+  }
+}
+

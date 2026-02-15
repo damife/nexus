@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Role - SwiftNexus Enterprise</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../assets/css/root.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <style>
+      * { font-family: "Courier New", Courier, monospace !important; }
+      [x-cloak] { display: none !important; }
+      
+      /* Hero gradient background */
+      .hero-gradient-bg {
+        background: linear-gradient(135deg, #d1fae5 0%, #ffffff 50%, #dbeafe 100%);
+      }
+      
+      /* Form styling */
+      .form-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 0;
+        border-bottom: 2px solid #d1d5db;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: transparent;
+      }
+      
+      .form-input:focus {
+        outline: none;
+        border-bottom-color: #10b981;
+      }
+      
+      .form-label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+      }
+      
+      .file-upload-area {
+        border: 2px dashed #d1d5db;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        text-align: center;
+        background: #f9fafb;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+      
+      .file-upload-area:hover {
+        border-color: #10b981;
+        background: #ecfdf5;
+      }
+      
+      .file-upload-area.dragover {
+        border-color: #10b981;
+        background: #d1fae5;
+      }
+      
+      .next-btn, .submit-btn {
+        background: #1f2937;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+      
+      .next-btn:hover, .submit-btn:hover {
+        background: #111827;
+      }
+      
+      .back-btn {
+        color: #6b7280;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: all 0.3s;
+      }
+      
+      .back-btn:hover {
+        color: #1f2937;
+      }
+      
+      /* Step indicator */
+      .step-indicator {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      
+      .step-dot {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        background: #d1d5db;
+        transition: all 0.3s;
+      }
+      
+      .step-dot.active {
+        background: #10b981;
+        transform: scale(1.2);
+      }
+      
+      /* Modal styling */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+      }
+      
+      .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .modal-content {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        transform: scale(0.9);
+        transition: transform 0.3s;
+      }
+      
+      .modal-overlay.show .modal-content {
+        transform: scale(1);
+      }
+      
+      .modal-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .modal-icon {
+        width: 3rem;
+        height: 3rem;
+        background: #fef3c7;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      
+      .modal-icon i {
+        color: #f59e0b;
+        font-size: 1.5rem;
+      }
+      
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+      
+      .modal-body {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      
+      .modal-button {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        background: #10b981;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .modal-button:hover {
+        background: #059669;
+      }
+      
+      /* Ultra Modern Dropdown Animations */
+      .dropdown-menu {
+        transform: translateY(-20px) scale(0.9) perspective(1000px) rotateX(-5deg);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear 0.3s;
+        pointer-events: none;
+        transform-origin: top center;
+      }
+      
+      .group:hover .dropdown-menu,
+      .dropdown-menu:hover {
+        transform: translateY(0) scale(1) perspective(1000px) rotateX(0deg);
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear 0s;
+        pointer-events: auto;
+      }
+      
+      /* Add padding to bridge the gap */
+      .dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+      }
+      
+      /* Staggered animation for dropdown items */
+      .dropdown-menu > div > div {
+        animation: fadeInUp 0.5s ease-out backwards;
+      }
+      
+      .group:hover .dropdown-menu > div > div:nth-child(1) { animation-delay: 0.05s; }
+      .group:hover .dropdown-menu > div > div:nth-child(2) { animation-delay: 0.1s; }
+      .group:hover .dropdown-menu > div > div:nth-child(3) { animation-delay: 0.15s; }
+      .group:hover .dropdown-menu > div > div:nth-child(4) { animation-delay: 0.2s; }
+      .group:hover .dropdown-menu > div > div:nth-child(5) { animation-delay: 0.25s; }
+      .group:hover .dropdown-menu > div > div:nth-child(6) { animation-delay: 0.3s; }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Animated gradient border with glow */
+      .dropdown-gradient-border {
+        position: relative;
+        padding: 2px;
+        background: linear-gradient(135deg, #34d399, #10b981, #059669, #10b981, #34d399);
+        background-size: 300% 300%;
+        animation: gradientShift 3s ease infinite;
+        border-radius: 1rem;
+        box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.2);
+      }
+      
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      .dropdown-content {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: calc(1rem - 2px);
+      }
+      
+      /* Modern dropdown item with magnetic effect */
+      .dropdown-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .dropdown-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #34d399, #10b981, #059669);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 4px 4px 0;
+      }
+      
+      .dropdown-item::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .dropdown-item:hover::before {
+        transform: scaleY(1);
+      }
+      
+      .dropdown-item:hover::after {
+        opacity: 1;
+      }
+      
+      .dropdown-item:hover {
+        transform: translateX(6px) translateY(-2px);
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+      }
+      
+      /* Icon animations */
+      .dropdown-item i {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-block;
+      }
+      
+      .dropdown-item:hover i {
+        transform: scale(1.2) rotate(5deg);
+        color: #059669;
+      }
+      
+      /* Section header animations */
+      .dropdown-section-header {
+        position: relative;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      
+      .dropdown-section-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #34d399, #10b981);
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .group:hover .dropdown-section-header::after {
+        width: 100%;
+      }
+      
+      /* Icon badge animations */
+      .dropdown-icon-badge {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+      }
+      
+      .group:hover .dropdown-icon-badge {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        background: linear-gradient(135deg, #34d399, #10b981) !important;
+      }
+      
+      /* Chevron rotation with bounce */
+      .group:hover .chevron-icon {
+        transform: rotate(180deg) scale(1.1);
+      }
+      
+      .chevron-icon {
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+      
+      /* Hover glow effect on dropdown */
+      .dropdown-gradient-border:hover {
+        box-shadow: 0 25px 70px rgba(16, 185, 129, 0.4), 0 0 50px rgba(16, 185, 129, 0.3);
+      }
+    </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation (Full from index.html) -->
+  <nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="../../index.html" class="flex items-center space-x-2">
+          <i class="bi bi-diagram-3-fill text-2xl text-emerald-600"></i>
+          <span class="text-xl font-bold text-gray-900">SwiftNexus</span>
+          <span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-semibold">Enterprise</span>
+        </a>
+
+        <div class="hidden lg:flex items-center space-x-6">
+          <!-- Products -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Products menu">
+              <span>Products</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[720px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-3 gap-6">
+              <div>
+                <div class="dropdown-section-header flex items-center gap-2">
+                  <div class="dropdown-icon-badge w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-shield-check text-white text-sm"></i>
+                  </div>
+                  <div class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Financial Crime Hub</div>
+                </div>
+                <div class="space-y-1.5">
+                  <a href="../products/safewatch-aml.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-shield-fill-check text-emerald-600 text-xs mr-2"></i>
+                    SafeWatch AML
+                  </a>
+                  <a href="../products/safewatch-kyc.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-person-check-fill text-emerald-600 text-xs mr-2"></i>
+                    SafeWatch KYC
+                  </a>
+                  <a href="../products/safewatch-screening.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-search text-emerald-600 text-xs mr-2"></i>
+                    SafeWatch Screening
+                  </a>
+                  <a href="../products/paymentguard.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-shield-lock-fill text-emerald-600 text-xs mr-2"></i>
+                    PaymentGuard
+                  </a>
+                  <a href="../products/safetrade.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-cart-check-fill text-emerald-600 text-xs mr-2"></i>
+                    SafeTrade
+                  </a>
+                  <a href="../products/chainfeed.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-link-45deg text-emerald-600 text-xs mr-2"></i>
+                    ChainFeed
+                  </a>
+                </div>
+              </div>
+              <div>
+                <div class="dropdown-section-header flex items-center gap-2">
+                  <div class="dropdown-icon-badge w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-cash-coin text-white text-sm"></i>
+                  </div>
+                  <div class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Global Payments Hub</div>
+                </div>
+                <div class="space-y-1.5">
+                  <a href="../products/paymentsafe.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-safe-fill text-blue-600 text-xs mr-2"></i>
+                    PaymentSafe
+                  </a>
+                  <a href="../products/messaging-warehouse.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-envelope-fill text-blue-600 text-xs mr-2"></i>
+                    Messaging Warehouse
+                  </a>
+                  <a href="../products/duplicate-detection.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-files text-blue-600 text-xs mr-2"></i>
+                    Duplication Detection
+                  </a>
+                </div>
+              </div>
+              <div>
+                <div class="dropdown-section-header flex items-center gap-2">
+                  <div class="dropdown-icon-badge w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-cloud-check text-white text-sm"></i>
+                  </div>
+                  <div class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Hosting Hub</div>
+                </div>
+                <div class="space-y-1.5">
+                  <a href="../products/swift-hosting.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-cloud-upload-fill text-purple-600 text-xs mr-2"></i>
+                    Swift Hosting
+                  </a>
+                </div>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solutions -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Solutions menu">
+              <span>Solutions</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[620px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-3 gap-6">
+              <div class="space-y-1.5">
+                <a href="../solutions/anti-money-laundering.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-shield-exclamation text-emerald-600 text-xs mr-2"></i>
+                  Anti Money Laundering
+                </a>
+                <a href="../solutions/sanctions-screening.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-search-heart text-emerald-600 text-xs mr-2"></i>
+                  Sanctions Screening
+                </a>
+                <a href="../solutions/kyc-compliance.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-person-badge text-emerald-600 text-xs mr-2"></i>
+                  KYC Compliance
+                </a>
+                <a href="../solutions/financial-crime-compliance.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-shield-fill text-emerald-600 text-xs mr-2"></i>
+                  Financial Crime and Compliance
+                </a>
+              </div>
+              <div class="space-y-1.5">
+                <a href="../solutions/ai-fraud-prevention.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-cpu-fill text-blue-600 text-xs mr-2"></i>
+                  AI Fraud Prevention
+                </a>
+                <a href="../solutions/ai-sanctions-detection.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-robot text-blue-600 text-xs mr-2"></i>
+                  AI Sanctions Detection
+                </a>
+                <a href="../solutions/verification-of-payee.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-check-circle-fill text-blue-600 text-xs mr-2"></i>
+                  Verification of Payee (VOP)
+                </a>
+                <a href="../solutions/confirmation-of-payee.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-check2-circle text-blue-600 text-xs mr-2"></i>
+                  Confirmation of Payee (COP)
+                </a>
+              </div>
+              <div class="space-y-1.5">
+                <a href="../solutions/corporate-compliance.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-building text-purple-600 text-xs mr-2"></i>
+                  Corporate Compliance Solution
+                </a>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Resources menu">
+              <span>Resources</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[420px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-2 gap-3">
+              <a href="../resources/events-webinars.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-calendar-event text-emerald-600 text-xs mr-2"></i>
+                Events & Webinars
+              </a>
+              <a href="../resources/case-studies.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-file-earmark-text text-emerald-600 text-xs mr-2"></i>
+                Case Studies
+              </a>
+              <a href="../resources/blog.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-journal-text text-blue-600 text-xs mr-2"></i>
+                Blog
+              </a>
+              <a href="../resources/white-papers.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-file-earmark-pdf text-blue-600 text-xs mr-2"></i>
+                White papers
+              </a>
+              <a href="../resources/videos.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-play-circle text-purple-600 text-xs mr-2"></i>
+                Videos
+              </a>
+              <a href="../resources/reports.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-graph-up text-purple-600 text-xs mr-2"></i>
+                Reports
+              </a>
+              <a href="../resources/glossary.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item col-span-2">
+                <i class="bi bi-book text-emerald-600 text-xs mr-2"></i>
+                Glossary
+              </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Company menu">
+              <span>Company</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[360px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-1 gap-2">
+              <a href="about.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-info-circle text-emerald-600 text-xs mr-2"></i>
+                About Us
+              </a>
+              <a href="careers.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-briefcase text-emerald-600 text-xs mr-2"></i>
+                Careers
+              </a>
+              <a href="leadership.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-people text-blue-600 text-xs mr-2"></i>
+                Leadership
+              </a>
+              <a href="partners.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-handshake text-blue-600 text-xs mr-2"></i>
+                Partners
+              </a>
+              <a href="news.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-newspaper text-purple-600 text-xs mr-2"></i>
+                News
+              </a>
+              <a href="contact.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-envelope text-purple-600 text-xs mr-2"></i>
+                Contact Us
+              </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="../login.html" class="text-gray-800 hover:text-emerald-600 font-semibold transition-colors">Login</a>
+          <a href="request-demo.html" class="px-4 py-1 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 font-semibold transition-colors">Book a Demo</a>
+          <a href="contact.html" class="px-4 py-1 rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-colors">Speak to an expert</a>
+        </div>
+
+        <button id="mobileMenuToggle" class="lg:hidden text-gray-800" aria-label="Toggle mobile menu">
+          <i class="bi bi-list text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-200">
+      <div class="px-4 py-4 space-y-3">
+        <div class="font-semibold text-gray-700">Products</div>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="../products/safewatch-aml.html" class="text-gray-700">SafeWatch AML</a>
+          <a href="../products/safewatch-kyc.html" class="text-gray-700">SafeWatch KYC</a>
+          <a href="../products/safewatch-screening.html" class="text-gray-700">SafeWatch Screening</a>
+          <a href="../products/paymentguard.html" class="text-gray-700">PaymentGuard</a>
+          <a href="../products/safetrade.html" class="text-gray-700">SafeTrade</a>
+          <a href="../products/chainfeed.html" class="text-gray-700">ChainFeed</a>
+          <a href="../products/paymentsafe.html" class="text-gray-700">PaymentSafe</a>
+          <a href="../products/messaging-warehouse.html" class="text-gray-700">Messaging Warehouse</a>
+          <a href="../products/duplicate-detection.html" class="text-gray-700">Duplication Detection</a>
+          <a href="../products/swift-hosting.html" class="text-gray-700">Swift Hosting</a>
+        </div>
+        <div class="font-semibold text-gray-700 pt-2">Solutions</div>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="../solutions/anti-money-laundering.html" class="text-gray-700">Anti Money Laundering</a>
+          <a href="../solutions/sanctions-screening.html" class="text-gray-700">Sanctions Screening</a>
+          <a href="../solutions/kyc-compliance.html" class="text-gray-700">KYC Compliance</a>
+          <a href="../solutions/financial-crime-compliance.html" class="text-gray-700">Financial Crime and Compliance</a>
+          <a href="../solutions/ai-fraud-prevention.html" class="text-gray-700">AI Fraud Prevention</a>
+          <a href="../solutions/ai-sanctions-detection.html" class="text-gray-700">AI Sanctions Detection</a>
+          <a href="../solutions/verification-of-payee.html" class="text-gray-700">Verification of Payee (VOP)</a>
+          <a href="../solutions/confirmation-of-payee.html" class="text-gray-700">Confirmation of Payee (COP)</a>
+          <a href="../solutions/corporate-compliance.html" class="text-gray-700">Corporate Compliance Solution</a>
+        </div>
+        <div class="font-semibold text-gray-700 pt-2">Resources</div>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="../resources/events-webinars.html" class="text-gray-700">Events & Webinars</a>
+          <a href="../resources/case-studies.html" class="text-gray-700">Case Studies</a>
+          <a href="../resources/blog.html" class="text-gray-700">Blog</a>
+          <a href="../resources/white-papers.html" class="text-gray-700">White papers</a>
+          <a href="../resources/videos.html" class="text-gray-700">Videos</a>
+          <a href="../resources/reports.html" class="text-gray-700">Reports</a>
+          <a href="../resources/glossary.html" class="text-gray-700">Glossary</a>
+        </div>
+        <div class="font-semibold text-gray-700 pt-2">Company</div>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="about.html" class="text-gray-700">About Us</a>
+          <a href="careers.html" class="text-gray-700">Careers</a>
+          <a href="leadership.html" class="text-gray-700">Leadership</a>
+          <a href="partners.html" class="text-gray-700">Partners</a>
+          <a href="news.html" class="text-gray-700">News</a>
+          <a href="contact.html" class="text-gray-700">Contact Us</a>
+        </div>
+        <a href="request-demo.html" class="block px-4 py-1 rounded-lg bg-emerald-600 text-white text-center font-semibold hover:bg-emerald-700">Book a Demo</a>
+        <a href="contact.html" class="block px-4 py-1 rounded-lg border border-emerald-600 text-emerald-700 text-center font-semibold hover:bg-emerald-50">Speak to an expert</a>
+        <a href="../login.html" class="block text-gray-800 font-semibold text-center">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-32 pb-20 overflow-hidden hero-gradient-bg">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md rounded-full text-sm font-bold text-emerald-700 border border-emerald-200 shadow-lg mb-6">
+          <i class="bi bi-briefcase text-emerald-600"></i>
+          <span>Job Application</span>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+          Apply for a Role at SwiftNexus
+        </h1>
+        
+        <p class="text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto">
+          Join our team and help shape the future of financial technology. Fill out the form below to submit your application.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLICATION FORM -->
+  <section class="py-12 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-lg shadow-sm p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Application Form</h2>
+        
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+          <div class="step-dot active" id="step1Dot"></div>
+          <div class="step-dot" id="step2Dot"></div>
+        </div>
+        
+        <form id="applicationForm" class="space-y-6">
+          <!-- Step 1: Personal Information -->
+          <div id="step1" class="space-y-6">
+            <div>
+              <label for="position" class="form-label">Position Applied For</label>
+              <input type="text" id="position" name="position" class="form-input" placeholder="e.g., Pre-sales consultant" required>
+            </div>
+
+            <div>
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter your full name" required>
+            </div>
+
+            <div>
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="your.email@example.com" required>
+            </div>
+
+            <div>
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" id="phone" name="phone" class="form-input" placeholder="+1 (555) 123-4567" required>
+            </div>
+
+            <div>
+              <label for="location" class="form-label">Location</label>
+              <input type="text" id="location" name="location" class="form-input" placeholder="City, Country" required>
+            </div>
+            
+            <button type="button" id="nextBtn" class="next-btn">Next</button>
+          </div>
+
+          <!-- Step 2: CV and Additional Information -->
+          <div id="step2" class="space-y-6 hidden">
+            <div class="flex items-center space-x-2 mb-4">
+              <button type="button" id="backBtn" class="back-btn" aria-label="Go back">
+                <i class="bi bi-arrow-left text-xl"></i>
+              </button>
+              <div>
+                <p class="text-sm text-gray-600" id="userInfoDisplay"></p>
+              </div>
+            </div>
+
+            <div>
+              <label for="coverLetter" class="form-label">Cover Letter</label>
+              <textarea id="coverLetter" name="coverLetter" rows="6" class="form-input" placeholder="Tell us why you're interested in this role and what makes you a great fit..." required></textarea>
+            </div>
+
+            <div>
+              <label class="form-label">Upload Your CV/Resume</label>
+              <div class="file-upload-area" id="fileUploadArea">
+                <input type="file" id="cvFile" name="cvFile" accept=".pdf,.doc,.docx" class="hidden" required title="Upload your CV or resume file">
+                <div class="flex flex-col items-center">
+                  <i class="bi bi-cloud-upload text-4xl text-emerald-600 mb-3"></i>
+                  <p class="text-gray-700 font-semibold mb-1">Click to upload or drag and drop</p>
+                  <p class="text-sm text-gray-500">PDF, DOC, or DOCX (Max. 5MB)</p>
+                  <p id="fileName" class="text-sm text-emerald-600 font-semibold mt-2 hidden"></p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="linkedin" class="form-label">LinkedIn Profile (Optional)</label>
+              <input type="url" id="linkedin" name="linkedin" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+            </div>
+
+            <div>
+              <label for="portfolio" class="form-label">Portfolio/Website (Optional)</label>
+              <input type="url" id="portfolio" name="portfolio" class="form-input" placeholder="https://yourportfolio.com">
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Application</button>
+
+            <p class="text-xs text-gray-500 text-center mt-4">
+              By submitting this form, you agree to our <a href="../legal/privacy-policy.html" class="text-emerald-600 hover:underline">Privacy Policy</a>. 
+              Your information will be used solely for recruitment purposes.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (Full from careers page) -->
+  <footer class="bg-gray-900 text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-10">
+        <div>
+          <a href="../../index.html" class="flex items-center space-x-2 mb-3">
+            <i class="bi bi-diagram-3-fill text-2xl text-white"></i>
+            <span class="text-xl font-bold text-white">SwiftNexus</span>
+          </a>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Integrated solutions for payments, financial crime and compliance.</p>
+          <div class="flex space-x-3">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn" title="LinkedIn"><i class="bi bi-linkedin text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Twitter" title="Twitter"><i class="bi bi-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub" title="GitHub"><i class="bi bi-github text-xl"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Products</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="../products/safewatch-aml.html" class="hover:text-white transition-colors">SafeWatch AML</a></li>
+            <li><a href="../products/safewatch-kyc.html" class="hover:text-white transition-colors">SafeWatch KYC</a></li>
+            <li><a href="../products/safewatch-screening.html" class="hover:text-white transition-colors">SafeWatch Screening</a></li>
+            <li><a href="../products/paymentguard.html" class="hover:text-white transition-colors">PaymentGuard</a></li>
+            <li><a href="../products/safetrade.html" class="hover:text-white transition-colors">SafeTrade</a></li>
+            <li><a href="../products/chainfeed.html" class="hover:text-white transition-colors">ChainFeed</a></li>
+            <li><a href="../products/paymentsafe.html" class="hover:text-white transition-colors">PaymentSafe</a></li>
+            <li><a href="../products/messaging-warehouse.html" class="hover:text-white transition-colors">Messaging Warehouse</a></li>
+            <li><a href="../products/duplicate-detection.html" class="hover:text-white transition-colors">Duplication Detection</a></li>
+            <li><a href="../products/swift-hosting.html" class="hover:text-white transition-colors">Swift Hosting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Solutions</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="../solutions/ai-fraud-prevention.html" class="hover:text-white transition-colors">AI Fraud Prevention</a></li>
+            <li><a href="../solutions/ai-sanctions-detection.html" class="hover:text-white transition-colors">AI Sanctions Detection</a></li>
+            <li><a href="../solutions/anti-money-laundering.html" class="hover:text-white transition-colors">Anti Money Laundering</a></li>
+            <li><a href="../solutions/confirmation-of-payee.html" class="hover:text-white transition-colors">Confirmation of Payee (COP)</a></li>
+            <li><a href="../solutions/corporate-compliance.html" class="hover:text-white transition-colors">Corporate Compliance Solution</a></li>
+            <li><a href="../solutions/financial-crime-compliance.html" class="hover:text-white transition-colors">Financial Crime and Compliance</a></li>
+            <li><a href="../solutions/kyc-compliance.html" class="hover:text-white transition-colors">KYC Compliance</a></li>
+            <li><a href="../solutions/sanctions-screening.html" class="hover:text-white transition-colors">Sanctions Screening</a></li>
+            <li><a href="../solutions/verification-of-payee.html" class="hover:text-white transition-colors">Verification of Payee (VOP)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Resources</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="../resources/events-webinars.html" class="hover:text-white transition-colors">Events & Webinars</a></li>
+            <li><a href="../resources/case-studies.html" class="hover:text-white transition-colors">Case Studies</a></li>
+            <li><a href="../resources/blog.html" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="../resources/white-papers.html" class="hover:text-white transition-colors">White papers</a></li>
+            <li><a href="../resources/videos.html" class="hover:text-white transition-colors">Videos</a></li>
+            <li><a href="../resources/reports.html" class="hover:text-white transition-colors">Reports</a></li>
+            <li><a href="../resources/glossary.html" class="hover:text-white transition-colors">Glossary</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Company</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="careers.html" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="leadership.html" class="hover:text-white transition-colors">Leadership</a></li>
+            <li><a href="partners.html" class="hover:text-white transition-colors">Partners</a></li>
+            <li><a href="news.html" class="hover:text-white transition-colors">News</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors">Contact Us</a></li>
+            <li><a href="request-demo.html" class="hover:text-white transition-colors">Book a Demo</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+        <p>&copy; <span id="copyrightYear">2018</span> SwiftNexus. All rights reserved.</p>
+        <div class="flex flex-wrap gap-4 mt-3 md:mt-0 justify-center md:justify-end">
+          <a href="../legal/privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="../legal/cookie-policy.html" class="hover:text-white transition-colors">Cookie Policy</a>
+          <a href="../legal/terms-of-service.html" class="hover:text-white transition-colors">Terms of Service</a>
+          <a href="../legal/legal-disclaimer.html" class="hover:text-white transition-colors">Legal Disclaimer</a>
+          <a href="../legal/accessibility-statement.html" class="hover:text-white transition-colors">Accessibility Statement</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Validation Modal -->
+  <div id="validationModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <h3 class="modal-title">Required Fields Missing</h3>
+      </div>
+      <div class="modal-body">
+        <p>Please fill in all required fields before proceeding.</p>
+      </div>
+      <button class="modal-button" id="modalCloseBtn">OK</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
+        const menu = document.getElementById('mobileMenu');
+        if (menu) menu.classList.toggle('hidden');
+      });
+
+      // Copyright year
+      const currentYear = new Date().getFullYear();
+      const copyrightEl = document.getElementById('copyrightYear');
+      if (copyrightEl) {
+        copyrightEl.textContent = `2018 - ${currentYear}`;
+      }
+
+      // 2-Step Form Logic
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const nextBtn = document.getElementById('nextBtn');
+      const backBtn = document.getElementById('backBtn');
+      const step1Dot = document.getElementById('step1Dot');
+      const step2Dot = document.getElementById('step2Dot');
+      const userInfoDisplay = document.getElementById('userInfoDisplay');
+
+      // Modal handling
+      const validationModal = document.getElementById('validationModal');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      
+      modalCloseBtn.addEventListener('click', function() {
+        validationModal.classList.remove('show');
+      });
+      
+      validationModal.addEventListener('click', function(e) {
+        if (e.target === validationModal) {
+          validationModal.classList.remove('show');
+        }
+      });
+
+      // Next button - go to step 2
+      nextBtn.addEventListener('click', function() {
+        // Validate step 1 fields
+        const position = document.getElementById('position').value;
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const location = document.getElementById('location').value;
+
+        if (!position || !fullName || !email || !phone || !location) {
+          validationModal.classList.add('show');
+          return;
+        }
+
+        // Show step 2, hide step 1
+        step1.classList.add('hidden');
+        step2.classList.remove('hidden');
+        
+        // Update step indicators
+        step1Dot.classList.remove('active');
+        step2Dot.classList.add('active');
+        
+        // Display user info
+        userInfoDisplay.textContent = `${fullName} - ${email}`;
+      });
+
+      // Back button - go to step 1
+      backBtn.addEventListener('click', function() {
+        step2.classList.add('hidden');
+        step1.classList.remove('hidden');
+        
+        // Update step indicators
+        step2Dot.classList.remove('active');
+        step1Dot.classList.add('active');
+      });
+
+      // File upload handling
+      const fileUploadArea = document.getElementById('fileUploadArea');
+      const fileInput = document.getElementById('cvFile');
+      const fileName = document.getElementById('fileName');
+
+      // Click to upload
+      fileUploadArea.addEventListener('click', function() {
+        fileInput.click();
+      });
+
+      // File selected
+      fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+          
+          if (fileSize > 5) {
+            alert('File size exceeds 5MB. Please upload a smaller file.');
+            e.target.value = '';
+            fileName.classList.add('hidden');
+            return;
+          }
+          
+          fileName.textContent = `Selected: ${file.name} (${fileSize} MB)`;
+          fileName.classList.remove('hidden');
+          fileUploadArea.classList.add('border-emerald-500', 'bg-emerald-50');
+        }
+      });
+
+      // Drag and drop
+      fileUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.add('dragover');
+      });
+
+      fileUploadArea.addEventListener('dragleave', function() {
+        fileUploadArea.classList.remove('dragover');
+      });
+
+      fileUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length > 0) {
+          const file = e.dataTransfer.files[0];
+          const fileSize = (file.size / 1024 / 1024).toFixed(2);
+          
+          if (fileSize > 5) {
+            alert('File size exceeds 5MB. Please upload a smaller file.');
+            return;
+          }
+          
+          fileInput.files = e.dataTransfer.files;
+          fileName.textContent = `Selected: ${file.name} (${fileSize} MB)`;
+          fileName.classList.remove('hidden');
+          fileUploadArea.classList.add('border-emerald-500', 'bg-emerald-50');
+        }
+      });
+
+      // Form submission
+      document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        try {
+          // Get form data
+          const formData = new FormData(this);
+          
+          // Convert FormData to JSON for API
+          const jsonData = {
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            position: formData.get('position'),
+            coverLetter: formData.get('coverLetter'),
+            portfolio: formData.get('portfolio'),
+            linkedin: formData.get('linkedin'),
+            github: formData.get('github'),
+            experience: formData.get('experience'),
+            currentCompany: formData.get('currentCompany'),
+            currentPosition: formData.get('currentPosition'),
+            education: formData.get('education'),
+            skills: formData.get('skills'),
+            availability: formData.get('availability'),
+            salary: formData.get('salary'),
+            workLocation: formData.get('workLocation'),
+            referral: formData.get('referral')
+          };
+          
+          // Create FormData for file upload
+          const apiFormData = new FormData();
+          
+          // Add all JSON fields
+          Object.keys(jsonData).forEach(key => {
+            if (jsonData[key]) {
+              apiFormData.append(key, jsonData[key]);
+            }
+          });
+          
+          // Add resume file if selected
+          const resumeFile = document.getElementById('resume').files[0];
+          if (resumeFile) {
+            apiFormData.append('resume', resumeFile);
+          }
+          
+          // Send to backend
+          const response = await fetch('/api/applications/submit', {
+            method: 'POST',
+            body: apiFormData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Show success message
+            alert('Thank you for your application! We have received your submission and will review it soon. You will receive a confirmation email shortly.');
+            
+            // Reset form
+            this.reset();
+            fileName.classList.add('hidden');
+            fileUploadArea.classList.remove('border-emerald-500', 'bg-emerald-50');
+            
+            // Reset to step 1
+            step2.classList.add('hidden');
+            step1.classList.remove('hidden');
+            step2Dot.classList.remove('active');
+            step1Dot.classList.add('active');
+            
+            // Redirect to careers page after 2 seconds
+            setTimeout(() => {
+              window.location.href = 'careers.html';
+            }, 2000);
+            
+          } else {
+            // Show error message
+            const errorMessage = result.errors && result.errors.length > 0 
+              ? result.errors.map(err => err.msg).join('\n')
+              : result.message || 'Failed to submit application';
+            alert('Error: ' + errorMessage);
+          }
+          
+        } catch (error) {
+          console.error('Submission error:', error);
+          alert('Network error: Failed to submit application. Please check your internet connection and try again.');
+        } finally {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      });
+
+      // Get position from URL parameter if available
+      const urlParams = new URLSearchParams(window.location.search);
+      const position = urlParams.get('position');
+      if (position) {
+        document.getElementById('position').value = decodeURIComponent(position);
+      }
+    });
+  </script>
+
+  <script>
+    // Comprehensive copyright year update
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentYear = new Date().getFullYear();
+      
+      // Update all possible copyright elements
+      const copyrightSelectors = [
+        '#copyrightYear',
+        '.copyright-year',
+        '.copyright',
+        '[id*="copyright"]',
+        '[class*="copyright"]'
+      ];
+      
+      copyrightSelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (el.textContent.includes('2018') && !el.textContent.includes(currentYear.toString())) {
+            el.textContent = `2018 - ${currentYear}`;
+          }
+        });
+      });
+      
+      // Also update any hardcoded text in footer
+      const footerTexts = document.querySelectorAll('footer p, .footer p');
+      footerTexts.forEach(el => {
+        if (el.textContent.includes('© 2018') && !el.textContent.includes(currentYear.toString())) {
+          el.textContent = el.textContent.replace('© 2018', `© 2018 - ${currentYear}`);
+        }
+        if (el.textContent.includes('© 2018 -') && !el.textContent.includes(currentYear.toString())) {
+          el.textContent = el.textContent.replace(/© 2018 - d{4}/, `© 2018 - ${currentYear}`);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

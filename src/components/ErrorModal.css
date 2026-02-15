@@ -1,0 +1,198 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.error-modal {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-modal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+.error-modal .modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.error-modal.error .modal-icon {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.error-modal.warning .modal-icon {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.error-modal.info .modal-icon {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.error-modal.info .modal-icon i.bi-check-circle-fill {
+  color: #10b981;
+}
+
+.error-modal .modal-header h2 {
+  flex: 1;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.error-modal .btn-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.2s;
+}
+
+.error-modal .btn-close:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.error-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.error-modal .error-message {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.error-modal .error-list {
+  margin-top: 1rem;
+}
+
+.error-modal .error-list h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.error-modal .error-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-modal .error-list li {
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  border-left: 3px solid;
+}
+
+.error-modal.error .error-list li {
+  border-left-color: #ef4444;
+}
+
+.error-modal.warning .error-list li {
+  border-left-color: #f59e0b;
+}
+
+.error-modal.info .error-list li {
+  border-left-color: #3b82f6;
+}
+
+.error-modal .modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.error-modal .btn {
+  padding: 0.625rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.error-modal .btn-primary {
+  background: var(--secondary);
+  color: white;
+}
+
+.error-modal .btn-primary:hover {
+  background: var(--secondary-dark);
+}
+
+@media (max-width: 768px) {
+  .error-modal {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .error-modal .modal-header {
+    padding: 1rem;
+  }
+  
+  .error-modal .modal-body {
+    padding: 1rem;
+  }
+}
+

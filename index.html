@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SwiftNexus Enterprise - Integrated Solutions for Payments, Financial Crime and Compliance">
+    <meta name="keywords" content="SWIFT, payments, financial crime, compliance, AML, KYC, sanctions, ISO 20022">
+    <meta name="author" content="SwiftNexus Enterprise">
+    <meta property="og:title" content="SwiftNexus Enterprise - Integrated Solutions for Payments, Financial Crime and Compliance">
+    <meta property="og:description" content="AI-powered solutions for compliance, payments, and SWIFT connectivity. Supporting institutions in detecting financial crime, meeting regulatory requirements, and streamlining secure transactions.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>SwiftNexus Enterprise - Integrated Solutions for Payments, Financial Crime and Compliance</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/favicon.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/root.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <style>
+      * { font-family: "Courier New", Courier, monospace !important; }
+      [x-cloak] { display: none !important; }
+
+      /* Hero Banner Styling - Restore CDN styling with root.css */
+      .blur-3xl {
+        filter: blur(64px);
+      }
+      .blur-xl {
+        filter: blur(24px);
+      }
+      .blur-lg {
+        filter: blur(16px);
+      }
+
+      /* Opacity utilities for hero banner */
+      .bg-white\/95 {
+        background-color: rgba(255, 255, 255, 0.95);
+      }
+      .bg-white\/90 {
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+      .bg-emerald-200\/30 {
+        background-color: rgba(167, 243, 208, 0.3);
+      }
+      .bg-emerald-400\/10 {
+        background-color: rgba(52, 211, 153, 0.1);
+      }
+      .bg-emerald-300\/20 {
+        background-color: rgba(110, 231, 183, 0.2);
+      }
+      .bg-emerald-500\/10 {
+        background-color: rgba(16, 185, 129, 0.1);
+      }
+      .bg-emerald-400\/30 {
+        background-color: rgba(52, 211, 153, 0.3);
+      }
+      .bg-emerald-600\/20 {
+        background-color: rgba(5, 150, 105, 0.2);
+      }
+      .bg-emerald-500\/30 {
+        background-color: rgba(16, 185, 129, 0.3);
+      }
+      .bg-emerald-400\/40 {
+        background-color: rgba(52, 211, 153, 0.4);
+      }
+      .bg-emerald-50\/60 {
+        background-color: rgba(236, 253, 245, 0.6);
+      }
+      .bg-emerald-100\/30 {
+        background-color: rgba(209, 250, 229, 0.3);
+      }
+      .bg-emerald-200\/15 {
+        background-color: rgba(167, 243, 208, 0.15);
+      }
+      .bg-emerald-600\/30 {
+        background-color: rgba(5, 150, 105, 0.3);
+      }
+      .bg-emerald-500\/20 {
+        background-color: rgba(16, 185, 129, 0.2);
+      }
+      .bg-emerald-400\/10 {
+        background-color: rgba(52, 211, 153, 0.1);
+      }
+      .bg-emerald-200\/80 {
+        background-color: rgba(167, 243, 208, 0.8);
+      }
+      .bg-emerald-600\/10 {
+        background-color: rgba(5, 150, 105, 0.1);
+      }
+      .border-emerald-200\/80 {
+        border-color: rgba(167, 243, 208, 0.8);
+      }
+      .shadow-emerald-600\/50 {
+        box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.5), 0 4px 6px -2px rgba(5, 150, 105, 0.5);
+      }
+      .shadow-emerald-500\/50 {
+        box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.5), 0 4px 6px -2px rgba(16, 185, 129, 0.5);
+      }
+
+      /* Text section utilities */
+      .transition-transform {
+        transition-property: transform;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+      }
+      .group:hover .group-hover\:translate-x-1 {
+        transform: translateX(0.25rem);
+      }
+
+      /* Ensure text section displays correctly */
+      .text-lg {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+      }
+      .text-gray-700 {
+        color: rgb(55, 65, 81);
+      }
+      .leading-relaxed {
+        line-height: 1.625;
+      }
+      .flex.items-start {
+        display: flex;
+        align-items: flex-start;
+      }
+      .gap-3 {
+        gap: 0.75rem;
+      }
+      .flex-1 {
+        flex: 1 1 0%;
+      }
+
+      /* Modern Hero Section Animations */
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.05);
+        }
+      }
+
+      .animate-pulse {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      /* Smooth transitions for modern UI */
+      .transform {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Glassmorphism effect */
+      .backdrop-blur-md {
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+      }
+
+      .backdrop-blur-sm {
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+      }
+
+      /* Gradient text effect */
+      .bg-clip-text {
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      /* Enhanced shadow effects */
+      .shadow-emerald-500\/20 {
+        box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2), 0 10px 10px -5px rgba(16, 185, 129, 0.1);
+      }
+
+      .shadow-emerald-500\/30 {
+        box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.3), 0 10px 10px -5px rgba(16, 185, 129, 0.15);
+      }
+
+      .shadow-emerald-500\/40 {
+        box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4), 0 10px 10px -5px rgba(16, 185, 129, 0.2);
+      }
+
+      /* Animation delay classes for staggered animations */
+      .animation-delay-1s {
+        animation-delay: 1s;
+      }
+
+      .animation-delay-2s {
+        animation-delay: 2s;
+      }
+
+      /* Ensure line breaks work properly */
+      .hero-heading {
+        white-space: pre-line;
+        line-height: 1.2;
+      }
+
+      /* Image fallback display */
+      .image-fallback {
+        display: flex;
+      }
+
+      /* Ultra Modern Dropdown Animations */
+      .dropdown-menu {
+        transform: translateY(-20px) scale(0.9) perspective(1000px) rotateX(-5deg);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear 0.3s;
+        pointer-events: none;
+        transform-origin: top center;
+      }
+
+      .group:hover .dropdown-menu,
+      .dropdown-menu:hover {
+        transform: translateY(0) scale(1) perspective(1000px) rotateX(0deg);
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear 0s;
+        pointer-events: auto;
+      }
+
+      /* Add padding to bridge the gap */
+      .dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+      }
+
+      /* Staggered animation for dropdown items */
+      .dropdown-menu > div > div {
+        animation: fadeInUp 0.5s ease-out backwards;
+      }
+
+      .group:hover .dropdown-menu > div > div:nth-child(1) { animation-delay: 0.05s; }
+      .group:hover .dropdown-menu > div > div:nth-child(2) { animation-delay: 0.1s; }
+      .group:hover .dropdown-menu > div > div:nth-child(3) { animation-delay: 0.15s; }
+      .group:hover .dropdown-menu > div > div:nth-child(4) { animation-delay: 0.2s; }
+      .group:hover .dropdown-menu > div > div:nth-child(5) { animation-delay: 0.25s; }
+      .group:hover .dropdown-menu > div > div:nth-child(6) { animation-delay: 0.3s; }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Animated gradient border with glow */
+      .dropdown-gradient-border {
+        position: relative;
+        padding: 2px;
+        background: linear-gradient(135deg, #34d399, #10b981, #059669, #10b981, #34d399);
+        background-size: 300% 300%;
+        animation: gradientShift 3s ease infinite;
+        border-radius: 1rem;
+        box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.2);
+      }
+
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      .dropdown-content {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: calc(1rem - 2px);
+      }
+
+      /* Modern dropdown item with magnetic effect */
+      .dropdown-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dropdown-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #34d399, #10b981, #059669);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .dropdown-item::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .dropdown-item:hover::before {
+        transform: scaleY(1);
+      }
+
+      .dropdown-item:hover::after {
+        opacity: 1;
+      }
+
+      .dropdown-item:hover {
+        transform: translateX(6px) translateY(-2px);
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+      }
+
+      /* Icon animations */
+      .dropdown-item i {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-block;
+      }
+
+      .dropdown-item:hover i {
+        transform: scale(1.2) rotate(5deg);
+        color: #059669;
+      }
+
+      /* Section header animations */
+      .dropdown-section-header {
+        position: relative;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .dropdown-section-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #34d399, #10b981);
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .group:hover .dropdown-section-header::after {
+        width: 100%;
+      }
+
+      /* Icon badge animations */
+      .dropdown-icon-badge {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+      }
+
+      .group:hover .dropdown-icon-badge {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        background: linear-gradient(135deg, #34d399, #10b981) !important;
+      }
+
+      /* Chevron rotation with bounce */
+      .group:hover .chevron-icon {
+        transform: rotate(180deg) scale(1.1);
+      }
+
+      .chevron-icon {
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+
+      /* Hover glow effect on dropdown */
+      .dropdown-gradient-border:hover {
+        box-shadow: 0 25px 70px rgba(16, 185, 129, 0.4), 0 0 50px rgba(16, 185, 129, 0.3);
+      }
+
+      /* Mobile Responsive Styles */
+      @media (max-width: 1023px) {
+        .dropdown-menu {
+          display: none !important;
+        }
+      }
+
+      /* Mobile Navigation Styles */
+      .mobile-nav-slide {
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .mobile-nav-slide.open {
+        transform: translateX(0);
+      }
+
+      /* Hamburger Animation */
+      .hamburger-line {
+        transition: all 0.3s ease-in-out;
+        transform-origin: center;
+      }
+
+      /* Mobile Section Content */
+      .mobile-section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+      }
+
+      .mobile-section-content.open {
+        max-height: 1000px;
+      }
+
+      /* Responsive Text Sizes */
+      @media (max-width: 640px) {
+        .hero-heading {
+          font-size: 2.5rem !important;
+          line-height: 1.2 !important;
+        }
+
+        .text-5xl {
+          font-size: 2.25rem !important;
+        }
+
+        .text-6xl {
+          font-size: 2.5rem !important;
+        }
+
+        .text-4xl {
+          font-size: 1.875rem !important;
+        }
+
+        .text-3xl {
+          font-size: 1.5rem !important;
+        }
+
+        .text-2xl {
+          font-size: 1.25rem !important;
+        }
+
+        .text-xl {
+          font-size: 1.125rem !important;
+        }
+      }
+
+      /* Responsive Containers */
+      @media (max-width: 768px) {
+        .max-w-7xl {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .grid {
+          grid-template-columns: 1fr !important;
+          gap: 1rem !important;
+        }
+
+        .lg\:grid-cols-2,
+        .lg\:grid-cols-3,
+        .lg\:grid-cols-4,
+        .md\:grid-cols-2,
+        .md\:grid-cols-3 {
+          grid-template-columns: 1fr !important;
+        }
+
+        .space-x-6 > * + * {
+          margin-left: 0 !important;
+          margin-top: 0.5rem;
+        }
+
+        .space-x-4 > * + * {
+          margin-left: 0 !important;
+          margin-top: 0.5rem;
+        }
+
+        /* Stack flex items vertically on mobile */
+        .lg\:flex-row {
+          flex-direction: column !important;
+        }
+
+        /* Full width buttons on mobile */
+        .lg\:w-auto {
+          width: 100% !important;
+        }
+      }
+
+      /* Mobile-first padding and margins */
+      @media (max-width: 640px) {
+        .px-4 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .px-6 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .px-8 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .py-20 {
+          padding-top: 3rem;
+          padding-bottom: 3rem;
+        }
+
+        .py-24 {
+          padding-top: 4rem;
+          padding-bottom: 4rem;
+        }
+
+        .pt-32 {
+          padding-top: 5rem;
+        }
+
+        .pb-24 {
+          padding-bottom: 3rem;
+        }
+
+        .mb-16 {
+          margin-bottom: 2rem;
+        }
+
+        .mb-12 {
+          margin-bottom: 1.5rem;
+        }
+
+        .mb-8 {
+          margin-bottom: 1rem;
+        }
+      }
+
+      /* Touch targets for mobile */
+      @media (max-width: 768px) {
+        button,
+        a {
+          min-height: 44px;
+          min-width: 44px;
+        }
+
+        .mobile-section-toggle {
+          padding: 1rem 0;
+        }
+
+        /* Better spacing for mobile links */
+        .mobile-section-content a {
+          padding: 0.75rem 1rem;
+          margin: 0.25rem 0;
+        }
+      }
+
+      /* Responsive images */
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Scrollbar styling for mobile menu */
+      .mobile-menu-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      .mobile-menu-scroll::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+
+      .mobile-menu-scroll::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 2px;
+      }
+
+      /* Prevent horizontal scroll */
+      body {
+        overflow-x: hidden;
+      }
+
+      /* Ensure proper viewport handling */
+      @media screen and (max-width: 768px) {
+        body {
+          -webkit-text-size-adjust: 100%;
+          -moz-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+        }
+      }
+
+      /* Simple Mobile Menu Styles */
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .mobile-menu-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .mobile-menu-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 320px;
+        max-width: 85vw;
+        height: 100%;
+        background: white;
+        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+        z-index: 10000;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .mobile-menu-panel.show {
+        transform: translateX(0);
+      }
+    </style>
+<body class="antialiased bg-white text-gray-900">
+  <nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="index.html" class="flex items-center space-x-2">
+          <i class="bi bi-diagram-3-fill text-2xl text-emerald-600"></i>
+          <span class="text-xl font-bold text-gray-900">SwiftNexus</span>
+          <span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-semibold">Enterprise</span>
+        </a>
+
+        <div class="hidden lg:flex items-center space-x-6">
+          <!-- Products -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Products menu">
+              <span>Products</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[720px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-3 gap-6">
+              <div>
+                <div class="dropdown-section-header flex items-center gap-2">
+                  <div class="dropdown-icon-badge w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-shield-check text-white text-sm"></i>
+                  </div>
+                  <div class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Financial Crime Hub</div>
+                </div>
+                <div class="space-y-1.5">
+                  <a href="pages/products/safewatch-aml.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-shield-fill-check text-emerald-600 text-xs mr-2"></i>
+                    SafeWatch AML
+                  </a>
+                  <a href="pages/products/safewatch-kyc.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-person-check-fill text-emerald-600 text-xs mr-2"></i>
+                    SafeWatch KYC
+                  </a>
+                  <a href="pages/products/safewatch-screening.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-search text-emerald-600 text-xs mr-2"></i>
+                    SafeWatch Screening
+                  </a>
+                  <a href="pages/products/paymentguard.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-shield-lock-fill text-emerald-600 text-xs mr-2"></i>
+                    PaymentGuard
+                  </a>
+                  <a href="pages/products/safetrade.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-cart-check-fill text-emerald-600 text-xs mr-2"></i>
+                    SafeTrade
+                  </a>
+                  <a href="pages/products/chainfeed.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-link-45deg text-emerald-600 text-xs mr-2"></i>
+                    ChainFeed
+                  </a>
+                </div>
+              </div>
+              <div>
+                <div class="dropdown-section-header flex items-center gap-2">
+                  <div class="dropdown-icon-badge w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-cash-coin text-white text-sm"></i>
+                  </div>
+                  <div class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Global Payments Hub</div>
+                </div>
+                <div class="space-y-1.5">
+                  <a href="pages/products/paymentsafe.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-safe-fill text-blue-600 text-xs mr-2"></i>
+                    PaymentSafe
+                  </a>
+                  <a href="pages/products/messaging-warehouse.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-envelope-fill text-blue-600 text-xs mr-2"></i>
+                    Messaging Warehouse
+                  </a>
+                  <a href="pages/products/duplicate-detection.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-files text-blue-600 text-xs mr-2"></i>
+                    Duplication Detection
+                  </a>
+                </div>
+              </div>
+              <div>
+                <div class="dropdown-section-header flex items-center gap-2">
+                  <div class="dropdown-icon-badge w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-cloud-check text-white text-sm"></i>
+                  </div>
+                  <div class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Hosting Hub</div>
+                </div>
+                <div class="space-y-1.5">
+                  <a href="pages/products/swift-hosting.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                    <i class="bi bi-cloud-upload-fill text-purple-600 text-xs mr-2"></i>
+                    Swift Hosting
+                  </a>
+                </div>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solutions -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Solutions menu">
+              <span>Solutions</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[620px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-3 gap-6">
+              <div class="space-y-1.5">
+                <a href="pages/solutions/anti-money-laundering.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-shield-exclamation text-emerald-600 text-xs mr-2"></i>
+                  Anti Money Laundering
+                </a>
+                <a href="pages/solutions/sanctions-screening.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-search-heart text-emerald-600 text-xs mr-2"></i>
+                  Sanctions Screening
+                </a>
+                <a href="pages/solutions/kyc-compliance.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-person-badge text-emerald-600 text-xs mr-2"></i>
+                  KYC Compliance
+                </a>
+                <a href="pages/solutions/financial-crime-compliance.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-shield-fill text-emerald-600 text-xs mr-2"></i>
+                  Financial Crime and Compliance
+                </a>
+              </div>
+              <div class="space-y-1.5">
+                <a href="pages/solutions/ai-fraud-prevention.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-cpu-fill text-blue-600 text-xs mr-2"></i>
+                  AI Fraud Prevention
+                </a>
+                <a href="pages/solutions/ai-sanctions-detection.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-robot text-blue-600 text-xs mr-2"></i>
+                  AI Sanctions Detection
+                </a>
+                <a href="pages/solutions/verification-of-payee.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-check-circle-fill text-blue-600 text-xs mr-2"></i>
+                  Verification of Payee (VOP)
+                </a>
+                <a href="pages/solutions/confirmation-of-payee.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-check2-circle text-blue-600 text-xs mr-2"></i>
+                  Confirmation of Payee (COP)
+                </a>
+              </div>
+              <div class="space-y-1.5">
+                <a href="pages/solutions/corporate-compliance.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                  <i class="bi bi-building text-purple-600 text-xs mr-2"></i>
+                  Corporate Compliance Solution
+                </a>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Resources menu">
+              <span>Resources</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[420px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-2 gap-3">
+              <a href="pages/resources/events-webinars.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-calendar-event text-emerald-600 text-xs mr-2"></i>
+                Events & Webinars
+              </a>
+              <a href="pages/resources/case-studies.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-file-earmark-text text-emerald-600 text-xs mr-2"></i>
+                Case Studies
+              </a>
+              <a href="pages/resources/blog.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-journal-text text-blue-600 text-xs mr-2"></i>
+                Blog
+              </a>
+              <a href="pages/resources/white-papers.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-file-earmark-pdf text-blue-600 text-xs mr-2"></i>
+                White papers
+              </a>
+              <a href="pages/resources/videos.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-play-circle text-purple-600 text-xs mr-2"></i>
+                Videos
+              </a>
+              <a href="pages/resources/reports.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-graph-up text-purple-600 text-xs mr-2"></i>
+                Reports
+              </a>
+              <a href="pages/resources/glossary.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item col-span-2">
+                <i class="bi bi-book text-emerald-600 text-xs mr-2"></i>
+                Glossary
+              </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-800 hover:text-emerald-600 font-semibold transition-colors" aria-label="Company menu">
+              <span>Company</span>
+              <i class="bi bi-chevron-down text-xs chevron-icon"></i>
+            </button>
+            <div class="dropdown-menu absolute left-0 mt-3 w-[360px]">
+              <div class="dropdown-gradient-border">
+                <div class="dropdown-content p-6 grid grid-cols-1 gap-2">
+              <a href="pages/company/about.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-info-circle text-emerald-600 text-xs mr-2"></i>
+                About Us
+              </a>
+              <a href="pages/company/careers.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-emerald-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-briefcase text-emerald-600 text-xs mr-2"></i>
+                Careers
+              </a>
+              <a href="pages/company/leadership.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-people text-blue-600 text-xs mr-2"></i>
+                Leadership
+              </a>
+              <a href="pages/company/partners.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-handshake text-blue-600 text-xs mr-2"></i>
+                Partners
+              </a>
+              <a href="pages/company/news.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-newspaper text-purple-600 text-xs mr-2"></i>
+                News
+              </a>
+              <a href="pages/company/contact.html" class="dropdown-item block px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent text-sm text-gray-800 font-medium group/item">
+                <i class="bi bi-envelope text-purple-600 text-xs mr-2"></i>
+                Contact Us
+              </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="pages/login.html" class="text-gray-800 hover:text-emerald-600 font-semibold transition-colors">Login</a>
+          <a href="pages/company/request-demo.html" class="px-4 py-1 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 font-semibold transition-colors">Book a Demo</a>
+          <a href="pages/company/contact.html" class="px-4 py-1 rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-colors">Speak to an expert</a>
+        </div>
+
+        <button id="mobileMenuToggle" class="lg:hidden text-gray-800" aria-label="Toggle mobile menu">
+          <i id="mobileMenuIcon" class="bi bi-list text-2xl transition-all duration-300"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-200">
+      <div class="max-h-96 overflow-y-auto">
+        <div class="px-4 py-4 space-y-3">
+          <!-- Products Dropdown -->
+          <div>
+            <button class="w-full flex items-center justify-between font-semibold text-gray-700 py-2 hover:text-emerald-600 transition-colors" onclick="toggleMobileDropdown('productsDropdown')">
+              <span>Products</span>
+              <i class="bi bi-chevron-down transition-transform" id="productsDropdownIcon"></i>
+            </button>
+            <div id="productsDropdown" class="hidden mt-2 space-y-1">
+              <div class="grid grid-cols-1 gap-2 pl-4">
+                <a href="pages/products/safewatch-aml.html" class="text-gray-700 hover:text-emerald-600 py-1">SafeWatch AML</a>
+                <a href="pages/products/safewatch-kyc.html" class="text-gray-700 hover:text-emerald-600 py-1">SafeWatch KYC</a>
+                <a href="pages/products/safewatch-screening.html" class="text-gray-700 hover:text-emerald-600 py-1">SafeWatch Screening</a>
+                <a href="pages/products/paymentguard.html" class="text-gray-700 hover:text-emerald-600 py-1">PaymentGuard</a>
+                <a href="pages/products/safetrade.html" class="text-gray-700 hover:text-emerald-600 py-1">SafeTrade</a>
+                <a href="pages/products/chainfeed.html" class="text-gray-700 hover:text-emerald-600 py-1">ChainFeed</a>
+                <a href="pages/products/paymentsafe.html" class="text-gray-700 hover:text-emerald-600 py-1">PaymentSafe</a>
+                <a href="pages/products/messaging-warehouse.html" class="text-gray-700 hover:text-emerald-600 py-1">Messaging Warehouse</a>
+                <a href="pages/products/duplicate-detection.html" class="text-gray-700 hover:text-emerald-600 py-1">Duplication Detection</a>
+                <a href="pages/products/swift-hosting.html" class="text-gray-700 hover:text-emerald-600 py-1">Swift Hosting</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solutions Dropdown -->
+          <div>
+            <button class="w-full flex items-center justify-between font-semibold text-gray-700 py-2 hover:text-emerald-600 transition-colors" onclick="toggleMobileDropdown('solutionsDropdown')">
+              <span>Solutions</span>
+              <i class="bi bi-chevron-down transition-transform" id="solutionsDropdownIcon"></i>
+            </button>
+            <div id="solutionsDropdown" class="hidden mt-2 space-y-1">
+              <div class="grid grid-cols-1 gap-2 pl-4">
+                <a href="pages/solutions/anti-money-laundering.html" class="text-gray-700 hover:text-emerald-600 py-1">Anti Money Laundering</a>
+                <a href="pages/solutions/sanctions-screening.html" class="text-gray-700 hover:text-emerald-600 py-1">Sanctions Screening</a>
+                <a href="pages/solutions/kyc-compliance.html" class="text-gray-700 hover:text-emerald-600 py-1">KYC Compliance</a>
+                <a href="pages/solutions/financial-crime-compliance.html" class="text-gray-700 hover:text-emerald-600 py-1">Financial Crime and Compliance</a>
+                <a href="pages/solutions/ai-fraud-prevention.html" class="text-gray-700 hover:text-emerald-600 py-1">AI Fraud Prevention</a>
+                <a href="pages/solutions/ai-sanctions-detection.html" class="text-gray-700 hover:text-emerald-600 py-1">AI Sanctions Detection</a>
+                <a href="pages/solutions/verification-of-payee.html" class="text-gray-700 hover:text-emerald-600 py-1">Verification of Payee (VOP)</a>
+                <a href="pages/solutions/confirmation-of-payee.html" class="text-gray-700 hover:text-emerald-600 py-1">Confirmation of Payee (COP)</a>
+                <a href="pages/solutions/corporate-compliance.html" class="text-gray-700 hover:text-emerald-600 py-1">Corporate Compliance Solution</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources Dropdown -->
+          <div>
+            <button class="w-full flex items-center justify-between font-semibold text-gray-700 py-2 hover:text-emerald-600 transition-colors" onclick="toggleMobileDropdown('resourcesDropdown')">
+              <span>Resources</span>
+              <i class="bi bi-chevron-down transition-transform" id="resourcesDropdownIcon"></i>
+            </button>
+            <div id="resourcesDropdown" class="hidden mt-2 space-y-1">
+              <div class="grid grid-cols-1 gap-2 pl-4">
+                <a href="pages/resources/events-webinars.html" class="text-gray-700 hover:text-emerald-600 py-1">Events & Webinars</a>
+                <a href="pages/resources/case-studies.html" class="text-gray-700 hover:text-emerald-600 py-1">Case Studies</a>
+                <a href="pages/resources/blog.html" class="text-gray-700 hover:text-emerald-600 py-1">Blog</a>
+                <a href="pages/resources/white-papers.html" class="text-gray-700 hover:text-emerald-600 py-1">White papers</a>
+                <a href="pages/resources/videos.html" class="text-gray-700 hover:text-emerald-600 py-1">Videos</a>
+                <a href="pages/resources/reports.html" class="text-gray-700 hover:text-emerald-600 py-1">Reports</a>
+                <a href="pages/resources/glossary.html" class="text-gray-700 hover:text-emerald-600 py-1">Glossary</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company Dropdown -->
+          <div>
+            <button class="w-full flex items-center justify-between font-semibold text-gray-700 py-2 hover:text-emerald-600 transition-colors" onclick="toggleMobileDropdown('companyDropdown')">
+              <span>Company</span>
+              <i class="bi bi-chevron-down transition-transform" id="companyDropdownIcon"></i>
+            </button>
+            <div id="companyDropdown" class="hidden mt-2 space-y-1">
+              <div class="grid grid-cols-1 gap-2 pl-4">
+                <a href="pages/company/about.html" class="text-gray-700 hover:text-emerald-600 py-1">About Us</a>
+                <a href="pages/company/careers.html" class="text-gray-700 hover:text-emerald-600 py-1">Careers</a>
+                <a href="pages/company/leadership.html" class="text-gray-700 hover:text-emerald-600 py-1">Leadership</a>
+                <a href="pages/company/partners.html" class="text-gray-700 hover:text-emerald-600 py-1">Partners</a>
+                <a href="pages/company/news.html" class="text-gray-700 hover:text-emerald-600 py-1">News</a>
+                <a href="pages/company/contact.html" class="text-gray-700 hover:text-emerald-600 py-1">Contact Us</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-3 border-t border-gray-200 space-y-2">
+            <a href="pages/login.html" class="block text-center text-gray-700 hover:text-emerald-600 font-medium py-2">Login</a>
+            <a href="pages/company/request-demo.html" class="block px-4 py-2 rounded-lg bg-emerald-600 text-white text-center font-semibold hover:bg-emerald-700">Book a Demo</a>
+            <a href="pages/company/contact.html" class="block px-4 py-2 rounded-lg border border-emerald-600 text-emerald-700 text-center font-semibold hover:bg-emerald-50">Speak to an expert</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30">
+    <!-- Animated background elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-emerald-400/20 to-emerald-600/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute top-1/2 -right-40 w-96 h-96 bg-gradient-to-br from-emerald-300/20 to-emerald-500/10 rounded-full blur-3xl animate-pulse animation-delay-1s"></div>
+      <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-gradient-to-br from-emerald-200/20 to-emerald-400/10 rounded-full blur-3xl animate-pulse animation-delay-2s"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <!-- Left Content -->
+        <div class="space-y-6 relative">
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-100/80 backdrop-blur-sm rounded-full text-xs font-semibold text-emerald-700 border border-emerald-200/50 shadow-sm">
+            <i class="bi bi-stars text-emerald-600"></i>
+            <span>Enterprise-Grade Solutions</span>
+          </div>
+
+          <!-- Main Heading -->
+          <div class="space-y-4">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-[1.15] tracking-tight">
+              <span class="block">Integrated Solutions</span>
+              <span class="block">for Payments,</span>
+              <span class="block">Financial Crime and</span>
+              <span class="block">Compliance</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl">
+              AI-powered solutions for compliance, payments, and Swift connectivity. Supporting institutions in detecting financial crime, meeting regulatory requirements, and streamlining secure transactions.
+            </p>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-3">
+            <a href="pages/company/request-demo.html" class="group relative px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-base shadow-2xl shadow-emerald-600/50 hover:bg-emerald-700 hover:shadow-emerald-700/60 transition-all duration-300 hover:scale-105 transform">
+              <span class="relative z-10 flex items-center justify-center gap-2">
+                Request a Demo
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="pages/company/contact.html" class="px-6 py-2.5 rounded-xl border-2 border-emerald-600 text-emerald-700 font-semibold text-base bg-white/80 backdrop-blur-sm hover:bg-emerald-50 hover:border-emerald-700 transition-all duration-300 hover:scale-105 transform shadow-sm">
+              Speak to an Expert
+            </a>
+          </div>
+
+          <!-- Trust Indicators -->
+          <div class="flex items-center gap-4 pt-6 border-t border-gray-200/50">
+            <div class="flex items-center gap-2">
+              <i class="bi bi-shield-check text-emerald-600 text-xl"></i>
+              <span class="text-sm text-gray-600">Bank-Level Security</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="bi bi-award text-emerald-600 text-xl"></i>
+              <span class="text-sm text-gray-600">ISO 27001 Certified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Content - Cards -->
+        <div class="relative">
+          <!-- Floating background elements -->
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-emerald-400/30 to-emerald-600/20 rounded-full blur-2xl"></div>
+          <div class="absolute top-1/2 -left-10 w-40 h-40 bg-gradient-to-br from-emerald-300/30 to-emerald-500/20 rounded-full blur-2xl"></div>
+
+          <!-- Centered Financial Crime Hub Card -->
+          <div class="flex justify-center mb-8 relative z-10">
+            <div class="group relative rounded-3xl overflow-hidden max-w-md w-full">
+              <!-- Image area with gradient blend -->
+              <div class="relative w-full aspect-[4/3] overflow-hidden">
+                <img src="assets/images/aml_hero.png" alt="Financial Crime Hub" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                <!-- Gradient overlay for seamless blend -->
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-emerald-50/40 pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-emerald-50/80 via-emerald-50/40 to-transparent pointer-events-none"></div>
+                <div class="hidden image-fallback w-full h-full items-center justify-center text-emerald-600">
+                  <i class="bi bi-image text-6xl opacity-30"></i>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Highlights -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 ml-4 md:ml-8">
+            <!-- Real-time Monitoring Card with Gradient Border -->
+            <div class="group relative rounded-2xl p-[2px] bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl p-6 h-full">
+              <div class="flex items-center gap-4 mb-4">
+                  <div class="w-14 h-14 bg-emerald-600 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <i class="bi bi-shield-check text-white text-xl"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">Real-time Monitoring</h4>
+                  <p class="text-xs text-gray-600">AI-powered detection</p>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm text-gray-700">
+                  <div class="flex items-center gap-2 group/item">
+                    <i class="bi bi-check-circle-fill text-emerald-600 group-hover/item:scale-125 transition-transform"></i>
+                    <span class="group-hover/item:text-emerald-700 transition-colors">24/7 Surveillance</span>
+                </div>
+                  <div class="flex items-center gap-2 group/item">
+                    <i class="bi bi-check-circle-fill text-emerald-600 group-hover/item:scale-125 transition-transform"></i>
+                    <span class="group-hover/item:text-emerald-700 transition-colors">Instant Alerts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Global Standards Card with Gradient Border -->
+            <div class="group relative rounded-2xl p-[2px] bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl p-6 h-full">
+              <div class="flex items-center gap-4 mb-4">
+                  <div class="w-14 h-14 bg-emerald-600 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <i class="bi bi-globe text-white text-xl"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">Global Standards</h4>
+                  <p class="text-xs text-gray-600">ISO 20022 Support</p>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm text-gray-700">
+                  <div class="flex items-center gap-2 group/item">
+                    <i class="bi bi-check-circle-fill text-emerald-600 group-hover/item:scale-125 transition-transform"></i>
+                    <span class="group-hover/item:text-emerald-700 transition-colors">SWIFT Connectivity</span>
+                </div>
+                  <div class="flex items-center gap-2 group/item">
+                    <i class="bi bi-check-circle-fill text-emerald-600 group-hover/item:scale-125 transition-transform"></i>
+                    <span class="group-hover/item:text-emerald-700 transition-colors">Regulatory Compliance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2nd Blade Image Section -->
+  <section class="py-8 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative w-full">
+        <img src="assets/images/key-takeaways-sibos.webp" alt="SwiftNexus platform overview" class="w-full h-[276px] md:h-[404px] object-cover rounded-xl shadow-lg">
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULAR SOLUTIONS -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <a href="pages/solutions/financial-crime-compliance.html" class="text-4xl font-bold text-gray-900 mb-4 hover:text-emerald-600 transition-colors block">From siloed complexity to modular solutions</a>
+        <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+          The all in one solution for businesses looking for maximum security across compliance, fraud, risk management and optimisation. The integrated modular platform can be adapted to suit any need at any time.
+        </p>
+        <a href="pages/solutions/financial-crime-compliance.html" class="mt-4 inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700">
+          Discover our single solution <i class="bi bi-arrow-right ml-1"></i>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg transition">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xl font-semibold text-gray-900">Financial Crime Hub</h3>
+            <i class="bi bi-shield-shaded text-emerald-600 text-2xl"></i>
+          </div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>SafeWatch AML - Stop financial crime in real time</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>SafeWatch KYC - Know and manage customer risk with ease</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>SafeWatch Screening - Screen against global watchlists seamlessly</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>PaymentGuard - Protect payments from fraud instantly</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>SafeTrade - Detect trade-based crime with precision</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>ChainFeed - Real-time sanctions list updates</li>
+          </ul>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg transition">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xl font-semibold text-gray-900">Global Payments Hub</h3>
+            <i class="bi bi-cash-coin text-emerald-600 text-2xl"></i>
+          </div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>PaymentSafe - Centralise and automate payment workflows</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>Messaging Warehouse - Monitor, analyse, and control messaging data</li>
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>Duplication Detection - Eliminate duplicate payments in real time</li>
+          </ul>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg transition">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xl font-semibold text-gray-900">Hosting Hub</h3>
+            <i class="bi bi-cloud-check text-emerald-600 text-2xl"></i>
+          </div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li><i class="bi bi-chevron-right text-emerald-600 mr-2 font-bold"></i>Swift Hosting - Outsource SWIFT connectivity for efficiency</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE AT SCALE -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-3">Scale compliance on your terms with a modular approach</h2>
+        <p class="text-lg text-gray-700">SwiftNexus products are toolsets for smarter, safer financial institutions – allowing you to meet the sector’s ever-changing challenges with confidence.</p>
+        <a href="pages/company/contact.html" class="mt-4 inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700">
+          Talk to our Experts <i class="bi bi-arrow-right ml-1"></i>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-graph-up text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Online and Offline Monitoring</h3>
+          <p class="text-xs text-gray-600">Analyse transactions in real-time and historical modes to find suspicious behaviour.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-activity text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Behaviour Analysis</h3>
+          <p class="text-xs text-gray-600">Track customer behaviour patterns for unusual activity that might indicate financial crime.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-sliders text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Customizable Scenarios</h3>
+          <p class="text-xs text-gray-600">Choose from pre-built scenarios or create rules to adapt to specific needs.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-speedometer2 text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Dashboards</h3>
+          <p class="text-xs text-gray-600">Interactive dashboards for risk, caseloads, and data trends.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-shield-exclamation text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Risk-Based Approach</h3>
+          <p class="text-xs text-gray-600">Link risk scores to customers, accounts, and transactions.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-cpu text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Sophisticated AI</h3>
+          <p class="text-xs text-gray-600">Reduce false positives with contextual analytics.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-file-check text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Comprehensive regulatory compliance</h3>
+          <p class="text-xs text-gray-600">Integrated reporting to streamline audits.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <i class="bi bi-file-earmark-bar-graph text-emerald-700 text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1 text-sm">Integrated Reporting</h3>
+          <p class="text-xs text-gray-600">Generate regulatory reports and compliance documentation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI POWER SECTION -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-6">
+            <i class="bi bi-cpu"></i>
+            <span>Artificial Intelligence</span>
+          </div>
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">Utilize the power of AI</h2>
+          <p class="text-lg text-gray-600 mb-6">
+            Use a variety of bespoke AI models in real-time supervised, unsupervised, and proprietary to provide compelling financial compliance risk, fraud detection capabilities, and optimal cross-border payment solutions.
+          </p>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">Explainable AI</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">Predictive modelling</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">Deep Clustering</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">OCR and NLP Technologies</span>
+            </li>
+          </ul>
+          <a href="pages/solutions/ai-fraud-prevention.html" class="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700">
+            Learn More <i class="bi bi-arrow-right ml-1"></i>
+          </a>
+        </div>
+        <div class="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-8 border border-emerald-100">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <i class="bi bi-brain text-emerald-600 text-4xl mb-4"></i>
+              <h3 class="font-semibold text-gray-900 mb-2">Machine Learning</h3>
+              <p class="text-sm text-gray-600">Advanced algorithms for pattern recognition</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <i class="bi bi-diagram-3 text-emerald-600 text-4xl mb-4"></i>
+              <h3 class="font-semibold text-gray-900 mb-2">Neural Networks</h3>
+              <p class="text-sm text-gray-600">Deep learning for complex analysis</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <i class="bi bi-graph-up-arrow text-emerald-600 text-4xl mb-4"></i>
+              <h3 class="font-semibold text-gray-900 mb-2">Predictive Analytics</h3>
+              <p class="text-sm text-gray-600">Forecast and prevent financial crime</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <i class="bi bi-shield-check text-emerald-600 text-4xl mb-4"></i>
+              <h3 class="font-semibold text-gray-900 mb-2">Risk Assessment</h3>
+              <p class="text-sm text-gray-600">Real-time risk scoring and evaluation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AML COMPLIANCE SECTION -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="order-2 lg:order-1">
+          <div class="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-8 border border-emerald-100">
+            <div class="grid grid-cols-2 gap-6">
+              <div class="bg-white rounded-xl p-6 shadow-md">
+                <i class="bi bi-file-earmark-check text-emerald-600 text-4xl mb-4"></i>
+                <h3 class="font-semibold text-gray-900 mb-2 text-sm">Regulatory Reports</h3>
+                <p class="text-xs text-gray-600">Automated compliance documentation</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 shadow-md">
+                <i class="bi bi-shield-lock text-emerald-600 text-4xl mb-4"></i>
+                <h3 class="font-semibold text-gray-900 mb-2 text-sm">AML Monitoring</h3>
+                <p class="text-xs text-gray-600">Real-time transaction screening</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 shadow-md">
+                <i class="bi bi-globe text-emerald-600 text-4xl mb-4"></i>
+                <h3 class="font-semibold text-gray-900 mb-2 text-sm">Global Standards</h3>
+                <p class="text-xs text-gray-600">FATF, EU directives compliance</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 shadow-md">
+                <i class="bi bi-clipboard-data text-emerald-600 text-4xl mb-4"></i>
+                <h3 class="font-semibold text-gray-900 mb-2 text-sm">Audit Trail</h3>
+                <p class="text-xs text-gray-600">Complete compliance history</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <div class="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-6">
+            <i class="bi bi-shield-check"></i>
+            <span>Compliance</span>
+          </div>
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">AML Compliance & Regulatory Alignment</h2>
+          <p class="text-lg text-gray-600 mb-6">
+            SwiftNexus products are toolsets for smarter, safer financial institutions – allowing you to meet the sector's ever-changing challenges with confidence.
+          </p>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">FATF Recommendations compliance</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">EU Anti-Money Laundering Directives</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">Local regulatory requirements</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="bi bi-check-circle text-emerald-600 text-xl"></i>
+              <span class="text-gray-700">Automated suspicious activity reporting</span>
+            </li>
+          </ul>
+          <a href="pages/solutions/anti-money-laundering.html" class="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700">
+            Learn More <i class="bi bi-arrow-right ml-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER LOGOS -->
+  <section class="py-16 bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-8">Trusted by leading financial institutions</p>
+        <div class="flex justify-center items-center gap-8 opacity-60">
+          <div class="flex items-center justify-center h-12"><img src="assets/images/surepay-logo.png" alt="Bank A" class="h-8 w-auto object-contain"></div>
+          <div class="flex items-center justify-center h-12"><img src="assets/images/LSEG-logo.png" alt="Bank B" class="h-8 w-auto object-contain"></div>
+          <div class="flex items-center justify-center h-12"><img src="assets/images/aws-logo.svg" alt="Bank C" class="h-8 w-auto object-contain"></div>
+          <div class="flex items-center justify-center h-12"><img src="assets/images/swift-logo.svg" alt="Bank D" class="h-8 w-auto object-contain"></div>
+          <div class="flex items-center justify-center h-12"><img src="assets/images/iPiD-logo.svg" alt="Bank D" class="h-8 w-auto object-contain"></div>
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS/NEWS SECTION -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-2">Insights from SwiftNexus</h2>
+        <h3 class="text-2xl font-semibold text-gray-700 mb-4">Latest news</h3>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+          News, views, and opinions from our trusted insight leaders. Everything from the latest compliance regulations to the best ways to battle anti-money laundering, read along and stay up to date.
+        </p>
+        <a href="pages/resources/blog.html" class="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700">
+          View all <i class="bi bi-arrow-right ml-1"></i>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="h-48 bg-gradient-to-br from-emerald-100 to-emerald-50 relative overflow-hidden">
+            <img src="assets/images/fully-accreedited-cloud-based.svg" alt="SWIFT Journey to the Cloud" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <div class="text-sm text-emerald-600 font-semibold mb-2">Featured</div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">The SWIFT Journey to the Cloud</h3>
+            <p class="text-gray-600 text-sm mb-4">Exploring the transformation of financial messaging infrastructure.</p>
+            <a href="pages/resources/white-papers.html" class="text-emerald-600 font-semibold hover:text-emerald-700 text-sm">
+              Download Whitepaper <i class="bi bi-arrow-right ml-1"></i>
+            </a>
+          </div>
+        </article>
+        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-50 relative overflow-hidden">
+            <img src="assets/images/financial-crime-solutions-hero3.png" alt="AI-Powered Financial Crime Detection" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <div class="text-sm text-emerald-600 font-semibold mb-2">News</div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">AI-Powered Financial Crime Detection</h3>
+            <p class="text-gray-600 text-sm mb-4">How artificial intelligence is revolutionizing AML compliance.</p>
+            <a href="pages/resources/blog.html" class="text-emerald-600 font-semibold hover:text-emerald-700 text-sm">
+              Read More <i class="bi bi-arrow-right ml-1"></i>
+            </a>
+          </div>
+        </article>
+        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="h-48 bg-gradient-to-br from-purple-100 to-purple-50 relative overflow-hidden">
+            <img src="assets/images/aml-dual-mode-monitoring_bg.svg" alt="Regulatory Updates 2025" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <div class="text-sm text-emerald-600 font-semibold mb-2">Compliance</div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Regulatory Updates 2025</h3>
+            <p class="text-gray-600 text-sm mb-4">Stay ahead with the latest compliance requirements and regulations.</p>
+            <a href="pages/resources/reports.html" class="text-emerald-600 font-semibold hover:text-emerald-700 text-sm">
+              Read More <i class="bi bi-arrow-right ml-1"></i>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY & COMPLIANCE -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Enterprise-Grade Security & Compliance</h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          Built with security and compliance at the core. Meet the highest standards for financial services.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-gray-50 rounded-xl p-8 border border-gray-200">
+          <div class="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="bi bi-shield-check text-emerald-600 text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Bank-Level Security</h3>
+          <p class="text-gray-600">End-to-end encryption, secure data centers, and regular security audits to protect your sensitive information.</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-8 border border-gray-200">
+          <div class="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="bi bi-file-earmark-check text-emerald-600 text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Regulatory Compliance</h3>
+          <p class="text-gray-600">Compliant with GDPR, PCI DSS, SOC 2, and other major regulatory frameworks worldwide.</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-8 border border-gray-200">
+          <div class="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="bi bi-award text-emerald-600 text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Industry Certifications</h3>
+          <p class="text-gray-600">ISO 27001 certified with continuous monitoring and compliance validation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-emerald-700 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-3">Ready to transform your operations?</h2>
+      <p class="text-lg md:text-xl mb-6 opacity-90">Book a demo or speak to an expert today.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="pages/company/request-demo.html" class="px-6 py-2 rounded-lg bg-white text-emerald-700 font-semibold hover:bg-gray-100 transition-colors inline-flex items-center space-x-2">
+          <span>Book a Demo</span>
+          <i class="bi bi-arrow-right"></i>
+        </a>
+        <a href="pages/company/contact.html" class="px-6 py-2 rounded-lg border-2 border-white text-white font-semibold hover:bg-white/10 transition-colors inline-flex items-center space-x-2">
+          <span>Speak to an expert</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-white py-14 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-10">
+        <div>
+          <a href="index.html" class="flex items-center space-x-2 mb-3">
+            <i class="bi bi-diagram-3-fill text-2xl text-white"></i>
+            <span class="text-xl font-bold text-white">SwiftNexus</span>
+          </a>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Integrated solutions for payments, financial crime and compliance.</p>
+          <div class="flex space-x-3 mt-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn" title="LinkedIn"><i class="bi bi-linkedin text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Twitter" title="Twitter"><i class="bi bi-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub" title="GitHub"><i class="bi bi-github text-xl"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Products</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="pages/products/safewatch-aml.html" class="hover:text-white transition-colors">SafeWatch AML</a></li>
+            <li><a href="pages/products/safewatch-kyc.html" class="hover:text-white transition-colors">SafeWatch KYC</a></li>
+            <li><a href="pages/products/safewatch-screening.html" class="hover:text-white transition-colors">SafeWatch Screening</a></li>
+            <li><a href="pages/products/paymentguard.html" class="hover:text-white transition-colors">PaymentGuard</a></li>
+            <li><a href="pages/products/safetrade.html" class="hover:text-white transition-colors">SafeTrade</a></li>
+            <li><a href="pages/products/chainfeed.html" class="hover:text-white transition-colors">ChainFeed</a></li>
+            <li><a href="pages/products/paymentsafe.html" class="hover:text-white transition-colors">PaymentSafe</a></li>
+            <li><a href="pages/products/messaging-warehouse.html" class="hover:text-white transition-colors">Messaging Warehouse</a></li>
+            <li><a href="pages/products/duplicate-detection.html" class="hover:text-white transition-colors">Duplication Detection</a></li>
+            <li><a href="pages/products/swift-hosting.html" class="hover:text-white transition-colors">Swift Hosting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Solutions</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="pages/solutions/anti-money-laundering.html" class="hover:text-white transition-colors">Anti Money Laundering</a></li>
+            <li><a href="pages/solutions/sanctions-screening.html" class="hover:text-white transition-colors">Sanctions Screening</a></li>
+            <li><a href="pages/solutions/kyc-compliance.html" class="hover:text-white transition-colors">KYC Compliance</a></li>
+            <li><a href="pages/solutions/financial-crime-compliance.html" class="hover:text-white transition-colors">Financial Crime and Compliance</a></li>
+            <li><a href="pages/solutions/ai-fraud-prevention.html" class="hover:text-white transition-colors">AI Fraud Prevention</a></li>
+            <li><a href="pages/solutions/ai-sanctions-detection.html" class="hover:text-white transition-colors">AI Sanctions Detection</a></li>
+            <li><a href="pages/solutions/verification-of-payee.html" class="hover:text-white transition-colors">Verification of Payee (VOP)</a></li>
+            <li><a href="pages/solutions/confirmation-of-payee.html" class="hover:text-white transition-colors">Confirmation of Payee (COP)</a></li>
+            <li><a href="pages/solutions/corporate-compliance.html" class="hover:text-white transition-colors">Corporate Compliance Solution</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3 text-black">Resources</h4>
+          <ul class="space-y-2 text-sm text-black">
+            <li><a href="pages/resources/events-webinars.html" class="hover:text-white transition-colors">Events & Webinars</a></li>
+            <li><a href="pages/resources/case-studies.html" class="hover:text-white transition-colors">Case Studies</a></li>
+            <li><a href="pages/resources/blog.html" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="pages/resources/white-papers.html" class="hover:text-white transition-colors">White papers</a></li>
+            <li><a href="pages/resources/videos.html" class="hover:text-white transition-colors">Videos</a></li>
+            <li><a href="pages/resources/reports.html" class="hover:text-white transition-colors">Reports</a></li>
+            <li><a href="pages/resources/glossary.html" class="hover:text-white transition-colors">Glossary</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Company</h4>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="pages/company/about.html" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="pages/company/careers.html" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="pages/company/leadership.html" class="hover:text-white transition-colors">Leadership</a></li>
+            <li><a href="pages/company/partners.html" class="hover:text-white transition-colors">Partners</a></li>
+            <li><a href="pages/company/news.html" class="hover:text-white transition-colors">News</a></li>
+            <li><a href="pages/company/contact.html" class="hover:text-white transition-colors">Contact Us</a></li>
+            <li><a href="pages/company/request-demo.html" class="hover:text-white transition-colors">Book a Demo</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+        <p>&copy; <span id="copyrightYear">2018</span> SwiftNexus. All rights reserved.</p>
+        <div class="flex flex-wrap gap-4 mt-3 md:mt-0 justify-center md:justify-end">
+          <a href="pages/legal/privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="pages/legal/cookie-policy.html" class="hover:text-white transition-colors">Cookie Policy</a>
+          <a href="pages/legal/terms-of-service.html" class="hover:text-white transition-colors">Terms of Service</a>
+          <a href="pages/legal/legal-disclaimer.html" class="hover:text-white transition-colors">Legal Disclaimer</a>
+          <a href="pages/legal/accessibility-statement.html" class="hover:text-white transition-colors">Accessibility Statement</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/YOUR_TAWK_ID/YOUR_TAWK_KEY';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+
+  <script>
+    // Comprehensive copyright year update
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentYear = new Date().getFullYear();
+      
+      // Update all possible copyright elements
+      const copyrightSelectors = [
+        '#copyrightYear',
+        '.copyright-year',
+        '.copyright',
+        '[id*="copyright"]',
+        '[class*="copyright"]'
+      ];
+      
+      copyrightSelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (el.textContent.includes('2018') && !el.textContent.includes(currentYear.toString())) {
+            el.textContent = `2018 - ${currentYear}`;
+          }
+        });
+      });
+      
+      // Also update any hardcoded text in footer
+      const footerTexts = document.querySelectorAll('footer p, .footer p');
+      footerTexts.forEach(el => {
+        if (el.textContent.includes('© 2018') && !el.textContent.includes(currentYear.toString())) {
+          el.textContent = el.textContent.replace('© 2018', `© 2018 - ${currentYear}`);
+        }
+        if (el.textContent.includes('© 2018 -') && !el.textContent.includes(currentYear.toString())) {
+        }
+      });
+    });
+
+    // Global Search Functionality
+    const searchInput = document.getElementById('global-search');
+    const searchDropdown = document.getElementById('search-dropdown');
+    const searchResults = document.getElementById('search-results');
+    const searchBtn = document.getElementById('search-btn');
+    const seeAllResults = document.getElementById('see-all-results');
+    let searchTimeout;
+
+    if (searchInput && searchDropdown) {
+      // Search on input with debounce
+      searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length < 2) {
+          searchDropdown.classList.add('hidden');
+          return;
+        }
+        
+        searchTimeout = setTimeout(() => {
+          performSearch(query);
+        }, 300);
+      });
+
+      // Search on button click
+      searchBtn.addEventListener('click', function() {
+        const query = searchInput.value.trim();
+        if (query.length >= 2) {
+          window.location.href = `pages/search.html?q=${encodeURIComponent(query)}`;
+        }
+      });
+
+      // Search on Enter key
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const query = this.value.trim();
+          if (query.length >= 2) {
+            window.location.href = `pages/search.html?q=${encodeURIComponent(query)}`;
+          }
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+          searchDropdown.classList.add('hidden');
+        }
+      });
+
+      // Perform search function
+      async function performSearch(query) {
+        try {
+          const response = await fetch(`/api/content/search?q=${encodeURIComponent(query)}&limit=5`);
+          const data = await response.json();
+          
+          if (data.success && data.results.length > 0) {
+            displaySearchResults(data.results, query);
+            seeAllResults.href = `pages/search.html?q=${encodeURIComponent(query)}`;
+            searchDropdown.classList.remove('hidden');
+          } else {
+            searchDropdown.classList.add('hidden');
+          }
+        } catch (error) {
+          console.error('Search error:', error);
+          searchDropdown.classList.add('hidden');
+        }
+      }
+
+      // Display search results
+      function displaySearchResults(results, query) {
+        searchResults.innerHTML = results.map(result => {
+          const resultUrl = getResultUrl(result);
+          const resultIcon = getResultIcon(result.contentType);
+          const resultTitle = highlightMatch(result.title, query);
+          const resultExcerpt = highlightMatch(result.excerpt || result.description || '', query);
+          
+          return `
+            <a href="${resultUrl}" class="block p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0 w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <i class="${resultIcon} text-emerald-600 text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-gray-900 truncate">${resultTitle}</div>
+                  <div class="text-xs text-gray-500 mt-1 line-clamp-2">${resultExcerpt}</div>
+                  <div class="text-xs text-emerald-600 mt-1 capitalize">${result.contentType.replace('-', ' ')}</div>
+                </div>
+              </div>
+            </a>
+          `;
+        }).join('');
+      }
+
+      // Get result URL based on content type
+      function getResultUrl(result) {
+        const urlMap = {
+          'blog': `pages/resources/blog.html#${result.slug || result.id}`,
+          'news': `pages/company/news.html#${result.slug || result.id}`,
+          'event': `pages/resources/events-webinars.html#${result.slug || result.id}`,
+          'webinar': `pages/resources/events-webinars.html#${result.slug || result.id}`,
+          'video': `pages/resources/videos.html#${result.slug || result.id}`,
+          'case-study': `pages/resources/case-studies.html#${result.slug || result.id}`,
+          'white-paper': `pages/resources/white-papers.html#${result.slug || result.id}`,
+          'report': `pages/resources/reports.html#${result.slug || result.id}`,
+          'glossary': `pages/resources/glossary.html#${result.slug || result.id}`,
+          'leadership': `pages/company/leadership.html#${result.slug || result.id}`
+        };
+        return urlMap[result.contentType] || '#';
+      }
+
+      // Get icon based on content type
+      function getResultIcon(contentType) {
+        const iconMap = {
+          'blog': 'bi-journal-text',
+          'news': 'bi-newspaper',
+          'event': 'bi-calendar-event',
+          'webinar': 'bi-camera-video',
+          'video': 'bi-play-circle',
+          'case-study': 'bi-file-earmark-text',
+          'white-paper': 'bi-file-earmark-pdf',
+          'report': 'bi-graph-up',
+          'glossary': 'bi-book',
+          'leadership': 'bi-people'
+        };
+        return iconMap[contentType] || 'bi-file-text';
+      }
+
+      // Highlight matching text
+      function highlightMatch(text, query) {
+        if (!text || !query) return text;
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<mark class="bg-yellow-200 text-yellow-800">$1</mark>');
+      }
+    }
+
+    // Mobile Menu Functionality
+    document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
+      const menu = document.getElementById('mobileMenu');
+      const icon = document.getElementById('mobileMenuIcon');
+      
+      if (menu) {
+        menu.classList.toggle('hidden');
+        
+        // Toggle between hamburger and X icon
+        if (icon) {
+          if (menu.classList.contains('hidden')) {
+            icon.classList.remove('bi-x-lg');
+            icon.classList.add('bi-list');
+          } else {
+            icon.classList.remove('bi-list');
+            icon.classList.add('bi-x-lg');
+          }
+        }
+      }
+    });
+
+    // Mobile Dropdown Toggle Function
+    function toggleMobileDropdown(dropdownId) {
+      const dropdown = document.getElementById(dropdownId);
+      const icon = document.getElementById(dropdownId + 'Icon');
+      
+      if (dropdown) {
+        dropdown.classList.toggle('hidden');
+        
+        // Rotate chevron icon
+        if (icon) {
+          icon.classList.toggle('rotate-180');
+        }
+      }
+    }
+
+    // Update copyright year
+    const currentYear = new Date().getFullYear();
+    const copyrightEl = document.getElementById('copyrightYear');
+    if (copyrightEl) {
+      copyrightEl.textContent = `2018 - ${currentYear}`;
+    }
+  </script>
+</body>
+</html>

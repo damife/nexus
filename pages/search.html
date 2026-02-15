@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - SwiftNexus</title>
+    <meta name="description" content="Search SwiftNexus content including blogs, news, events, videos, case studies, white papers, reports, glossary, and leadership information.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        /* Search-specific styles */
+        .search-highlight {
+            background-color: #fef08a;
+            color: #854d0e;
+            padding: 1px 2px;
+            border-radius: 2px;
+        }
+        
+        .result-card {
+            transition: all 0.2s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-tag {
+            transition: all 0.2s ease;
+        }
+        
+        .filter-tag:hover {
+            transform: scale(1.05);
+        }
+        
+        .filter-tag.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .skeleton-loader {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .no-results {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation (same as main site) -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="../index.html" class="flex items-center space-x-2">
+                    <i class="bi bi-diagram-3-fill text-2xl text-emerald-600"></i>
+                    <span class="text-lg sm:text-xl font-bold text-gray-900">SwiftNexus</span>
+                    <span class="hidden sm:inline-block text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-semibold">Enterprise</span>
+                </a>
+
+                <!-- Global Search -->
+                <div class="hidden lg:flex items-center">
+                    <div class="relative search-container">
+                        <input type="text" 
+                               id="global-search" 
+                               class="w-64 px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                               placeholder="Search content..."
+                               autocomplete="off">
+                        <button id="search-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-600 transition-colors" title="Search" aria-label="Search">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-6">
+                    <!-- Navigation items would go here -->
+                    <a href="../index.html" class="text-emerald-600 font-semibold hover:text-emerald-700">Home</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100" title="Toggle mobile menu" aria-label="Toggle mobile menu">
+                    <i class="bi bi-list text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Header -->
+    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-blue-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">Search Results</h1>
+                <p class="text-xl text-gray-600 mb-8">Find content across all SwiftNexus resources</p>
+                
+                <!-- Advanced Search Form -->
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <input type="text" 
+                                       id="main-search-input" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                       placeholder="Search for blogs, news, events, videos...">
+                            </div>
+                            <div class="flex gap-2">
+                                <select id="content-type-filter" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" title="Filter by content type" aria-label="Filter search results by content type">
+                                    <option value="all">All Content</option>
+                                    <option value="blogs">Blogs</option>
+                                    <option value="news">News</option>
+                                    <option value="events">Events</option>
+                                    <option value="webinars">Webinars</option>
+                                    <option value="videos">Videos</option>
+                                    <option value="case-studies">Case Studies</option>
+                                    <option value="white-papers">White Papers</option>
+                                    <option value="reports">Reports</option>
+                                    <option value="glossary">Glossary</option>
+                                    <option value="leadership">Leadership</option>
+                                </select>
+                                <button id="search-submit" class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                                    <i class="bi bi-search mr-2"></i>Search
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Filters -->
+                        <div class="mt-4 flex flex-wrap gap-2" id="quick-filters">
+                            <button class="filter-tag px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200" data-category="Compliance">Compliance</button>
+                            <button class="filter-tag px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200" data-category="AML">AML</button>
+                            <button class="filter-tag px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200" data-category="KYC">KYC</button>
+                            <button class="filter-tag px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200" data-category="Sanctions">Sanctions</button>
+                            <button class="filter-tag px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200" data-category="AI">AI</button>
+                            <button class="filter-tag px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200" data-category="Payments">Payments</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Results -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Results Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div id="results-info">
+                    <h2 class="text-2xl font-bold text-gray-900">Search Results</h2>
+                    <p class="text-gray-600 mt-1">Loading...</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <select id="sort-results" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" title="Sort results" aria-label="Sort search results">
+                        <option value="relevance">Sort by Relevance</option>
+                        <option value="date">Sort by Date</option>
+                        <option value="title">Sort by Title</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="hidden">
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="skeleton-loader h-4 w-3/4 rounded mb-2"></div>
+                        <div class="skeleton-loader h-3 w-1/2 rounded mb-4"></div>
+                        <div class="skeleton-loader h-3 w-full rounded mb-2"></div>
+                        <div class="skeleton-loader h-3 w-5/6 rounded"></div>
+                    </div>
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="skeleton-loader h-4 w-2/3 rounded mb-2"></div>
+                        <div class="skeleton-loader h-3 w-1/3 rounded mb-4"></div>
+                        <div class="skeleton-loader h-3 w-full rounded mb-2"></div>
+                        <div class="skeleton-loader h-3 w-4/5 rounded"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Container -->
+            <div id="search-results-container" class="space-y-6">
+                <!-- Results will be populated here -->
+            </div>
+
+            <!-- No Results -->
+            <div id="no-results" class="hidden no-results text-center py-12">
+                <i class="bi bi-search text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">No results found</h3>
+                <p class="text-gray-600 mb-6">Try adjusting your search terms or filters</p>
+                <div class="space-y-2 text-left max-w-md mx-auto">
+                    <p class="text-sm text-gray-500"><strong>Suggestions:</strong></p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Check your spelling</li>
+                        <li>• Try more general keywords</li>
+                        <li>• Use different search terms</li>
+                        <li>• Remove filters to see more results</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="mt-12 flex justify-center">
+                <!-- Pagination will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as main site) -->
+    <footer class="bg-gray-900 text-white py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-10">
+                <!-- Footer content would go here -->
+                <div>
+                    <a href="../index.html" class="flex items-center space-x-2 mb-3">
+                        <i class="bi bi-diagram-3-fill text-2xl text-white"></i>
+                        <span class="text-xl font-bold">SwiftNexus</span>
+                    </a>
+                    <p class="text-gray-400 text-sm">Enterprise Financial Compliance Solutions</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © <span id="copyrightYear">2018</span> SwiftNexus. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Search functionality
+        let currentQuery = '';
+        let currentPage = 1;
+        let currentType = 'all';
+        let currentCategory = null;
+        let currentSort = 'relevance';
+        let searchTimeout;
+
+        // Get URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                q: params.get('q') || '',
+                type: params.get('type') || 'all',
+                category: params.get('category') || null,
+                page: parseInt(params.get('page')) || 1,
+                sort: params.get('sort') || 'relevance'
+            };
+        }
+
+        // Update URL parameters
+        function updateUrlParams() {
+            const params = new URLSearchParams();
+            if (currentQuery) params.set('q', currentQuery);
+            if (currentType !== 'all') params.set('type', currentType);
+            if (currentCategory) params.set('category', currentCategory);
+            if (currentPage > 1) params.set('page', currentPage);
+            if (currentSort !== 'relevance') params.set('sort', currentSort);
+            
+            const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+            window.history.replaceState({}, '', newUrl);
+        }
+
+        // Perform search
+        async function performSearch(query = currentQuery, page = currentPage, type = currentType, category = currentCategory, sort = currentSort) {
+            currentQuery = query;
+            currentPage = page;
+            currentType = type;
+            currentCategory = category;
+            currentSort = sort;
+
+            updateUrlParams();
+
+            if (!query.trim()) {
+                showNoResults();
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const params = new URLSearchParams({
+                    q: query,
+                    type: type,
+                    limit: 10,
+                    page: page,
+                    sort: sort
+                });
+                
+                if (category) params.set('category', category);
+
+                const response = await fetch(`/api/content/search?${params}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data.results, data.pagination, query);
+                } else {
+                    showError(data.message || 'Search failed');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showError('Search failed. Please try again.');
+            }
+        }
+
+        // Display search results
+        function displayResults(results, pagination, query) {
+            const container = document.getElementById('search-results-container');
+            const resultsInfo = document.getElementById('results-info');
+            const noResults = document.getElementById('no-results');
+            const loadingState = document.getElementById('loading-state');
+
+            loadingState.classList.add('hidden');
+            noResults.classList.add('hidden');
+
+            if (results.length === 0) {
+                showNoResults();
+                return;
+            }
+
+            // Update results info
+            const start = (pagination.page - 1) * pagination.limit + 1;
+            const end = Math.min(start + results.length - 1, pagination.total);
+            resultsInfo.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-900">Search Results</h2>
+                <p class="text-gray-600 mt-1">Showing ${start}-${end} of ${pagination.total} results for "${query}"</p>
+            `;
+
+            // Display results
+            container.innerHTML = results.map(result => createResultCard(result, query)).join('');
+
+            // Update pagination
+            updatePagination(pagination);
+        }
+
+        // Create result card
+        function createResultCard(result, query) {
+            const url = getResultUrl(result);
+            const icon = getResultIcon(result.contentType);
+            const highlightedTitle = highlightText(result.title, query);
+            const highlightedExcerpt = highlightText(result.excerpt || result.description || '', query);
+            const tags = result.tags ? result.tags.slice(0, 3) : [];
+            
+            return `
+                <div class="result-card bg-white rounded-lg shadow-sm p-6 hover:shadow-md">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                            <i class="${icon} text-emerald-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                        <a href="${url}" class="hover:text-emerald-600 transition-colors">
+                                            ${highlightedTitle}
+                                        </a>
+                                    </h3>
+                                    <p class="text-gray-600 mb-3 line-clamp-3">${highlightedExcerpt}</p>
+                                    <div class="flex flex-wrap items-center gap-2 text-sm">
+                                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full capitalize">
+                                            ${result.contentType.replace('-', ' ')}
+                                        </span>
+                                        ${result.category ? `<span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full">${result.category}</span>` : ''}
+                                        ${result.author ? `<span class="text-gray-500">By ${result.author}</span>` : ''}
+                                        ${result.publishedDate ? `<span class="text-gray-500">${formatDate(result.publishedDate)}</span>` : ''}
+                                    </div>
+                                    ${tags.length > 0 ? `
+                                        <div class="flex flex-wrap gap-1 mt-2">
+                                            ${tags.map(tag => `<span class="text-xs text-gray-500">#${tag}</span>`).join('')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get result URL
+        function getResultUrl(result) {
+            const urlMap = {
+                'blog': `blog.html#${result.slug || result.id}`,
+                'news': `../company/news.html#${result.slug || result.id}`,
+                'event': `events-webinars.html#${result.slug || result.id}`,
+                'webinar': `events-webinars.html#${result.slug || result.id}`,
+                'video': `videos.html#${result.slug || result.id}`,
+                'case-study': `case-studies.html#${result.slug || result.id}`,
+                'white-paper': `white-papers.html#${result.slug || result.id}`,
+                'report': `reports.html#${result.slug || result.id}`,
+                'glossary': `glossary.html#${result.slug || result.id}`,
+                'leadership': `../company/leadership.html#${result.slug || result.id}`
+            };
+            return urlMap[result.contentType] || '#';
+        }
+
+        // Get result icon
+        function getResultIcon(contentType) {
+            const iconMap = {
+                'blog': 'bi-journal-text',
+                'news': 'bi-newspaper',
+                'event': 'bi-calendar-event',
+                'webinar': 'bi-camera-video',
+                'video': 'bi-play-circle',
+                'case-study': 'bi-file-earmark-text',
+                'white-paper': 'bi-file-earmark-pdf',
+                'report': 'bi-graph-up',
+                'glossary': 'bi-book',
+                'leadership': 'bi-people'
+            };
+            return iconMap[contentType] || 'bi-file-text';
+        }
+
+        // Highlight text
+        function highlightText(text, query) {
+            if (!text || !query) return text;
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        // Update pagination
+        function updatePagination(pagination) {
+            const container = document.getElementById('pagination');
+            
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '<div class="flex items-center space-x-2">';
+            
+            // Previous button
+            if (pagination.page > 1) {
+                paginationHTML += `
+                    <button onclick="performSearch('${currentQuery}', ${pagination.page - 1}, '${currentType}', '${currentCategory}', '${currentSort}')" 
+                            class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                `;
+            }
+
+            // Page numbers
+            const startPage = Math.max(1, pagination.page - 2);
+            const endPage = Math.min(pagination.totalPages, pagination.page + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const isActive = i === pagination.page;
+                paginationHTML += `
+                    <button onclick="performSearch('${currentQuery}', ${i}, '${currentType}', '${currentCategory}', '${currentSort}')" 
+                            class="px-3 py-2 border rounded-lg ${isActive ? 'bg-emerald-600 text-white border-emerald-600' : 'border-gray-300 hover:bg-gray-50'}">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            // Next button
+            if (pagination.page < pagination.totalPages) {
+                paginationHTML += `
+                    <button onclick="performSearch('${currentQuery}', ${pagination.page + 1}, '${currentType}', '${currentCategory}', '${currentSort}')" 
+                            class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                `;
+            }
+
+            paginationHTML += '</div>';
+            container.innerHTML = paginationHTML;
+        }
+
+        // Show loading state
+        function showLoading() {
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('search-results-container').innerHTML = '';
+            document.getElementById('no-results').classList.add('hidden');
+        }
+
+        // Show no results
+        function showNoResults() {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('search-results-container').innerHTML = '';
+            document.getElementById('no-results').classList.remove('hidden');
+            document.getElementById('results-info').innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-900">Search Results</h2>
+                <p class="text-gray-600 mt-1">No results found</p>
+            `;
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('search-results-container').innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <i class="bi bi-exclamation-triangle text-red-600 mr-2"></i>
+                        <span class="text-red-800">${message}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = getUrlParams();
+            
+            // Set initial values
+            document.getElementById('main-search-input').value = params.q;
+            document.getElementById('content-type-filter').value = params.type;
+            document.getElementById('sort-results').value = params.sort;
+            
+            // Set active category filter
+            if (params.category) {
+                const categoryBtn = document.querySelector(`[data-category="${params.category}"]`);
+                if (categoryBtn) {
+                    categoryBtn.classList.add('active');
+                }
+            }
+
+            // Perform initial search
+            if (params.q) {
+                performSearch(params.q, params.page, params.type, params.category, params.sort);
+            } else {
+                showNoResults();
+            }
+
+            // Search input
+            const searchInput = document.getElementById('main-search-input');
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
+                
+                if (query.length < 2) {
+                    showNoResults();
+                    return;
+                }
+                
+                searchTimeout = setTimeout(() => {
+                    performSearch(query, 1, currentType, currentCategory, currentSort);
+                }, 500);
+            });
+
+            // Search submit
+            document.getElementById('search-submit').addEventListener('click', function() {
+                const query = searchInput.value.trim();
+                if (query.length >= 2) {
+                    performSearch(query, 1, currentType, currentCategory, currentSort);
+                }
+            });
+
+            // Enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query.length >= 2) {
+                        performSearch(query, 1, currentType, currentCategory, currentSort);
+                    }
+                }
+            });
+
+            // Content type filter
+            document.getElementById('content-type-filter').addEventListener('change', function() {
+                const type = this.value;
+                const query = searchInput.value.trim();
+                if (query.length >= 2) {
+                    performSearch(query, 1, type, currentCategory, currentSort);
+                }
+            });
+
+            // Sort filter
+            document.getElementById('sort-results').addEventListener('change', function() {
+                const sort = this.value;
+                const query = searchInput.value.trim();
+                if (query.length >= 2) {
+                    performSearch(query, 1, currentType, currentCategory, sort);
+                }
+            });
+
+            // Category filters
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const query = searchInput.value.trim();
+                    
+                    // Toggle active state
+                    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                    
+                    if (currentCategory === category) {
+                        currentCategory = null;
+                    } else {
+                        this.classList.add('active');
+                        currentCategory = category;
+                    }
+                    
+                    if (query.length >= 2) {
+                        performSearch(query, 1, currentType, currentCategory, currentSort);
+                    }
+                });
+            });
+
+            // Update copyright year
+            const currentYear = new Date().getFullYear();
+            const copyrightYear = document.getElementById('copyrightYear');
+            if (copyrightYear) {
+                copyrightYear.textContent = currentYear;
+            }
+        });
+    </script>
+</body>
+</html>

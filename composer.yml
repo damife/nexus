@@ -1,0 +1,284 @@
+# SwiftNexus Enterprise - Complete Production Setup
+# Production-ready containerized deployment with Docker Compose
+# Renamed from docker-compose.yml to composer.yml for better naming
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database - Production Ready
+  postgres:
+    image: postgres:15-alpine
+    container_name: swiftnexus-db
+    environment:
+      POSTGRES_DB: swiftnexus_prod
+      POSTGRES_USER: swiftnexus_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-swiftnexus_secure_password_2024}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backups:/backups
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swiftnexus_user -d swiftnexus_prod"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis Cache - Production Ready
+  redis:
+    image: redis:7-alpine
+    container_name: swiftnexus-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_secure_password_2024}
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # RabbitMQ Message Queue - Production Ready
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: swiftnexus-queue
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-swiftnexus}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-rabbitmq_secure_password_2024}
+      RABBITMQ_DEFAULT_VHOST: swiftnexus
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MGMT_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Backend API - Production Ready
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: runner
+    container_name: swiftnexus-backend
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: swiftnexus_prod
+      DB_USER: swiftnexus_user
+      DB_PASSWORD: ${DB_PASSWORD:-swiftnexus_secure_password_2024}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-swiftnexus}:${RABBITMQ_PASSWORD:-rabbitmq_secure_password_2024}@rabbitmq:5672/swiftnexus
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secure_password_2024}@redis:6379
+      JWT_SECRET: ${JWT_SECRET:-jwt_secret_key_2024_very_long_and_secure}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      MAX_UPLOAD_SIZE: ${MAX_UPLOAD_SIZE:-50MB}
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./certs:/app/certs:ro
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Frontend - Production Ready
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: swiftnexus-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Nginx Reverse Proxy - Production Ready
+  nginx:
+    image: nginx:alpine
+    container_name: swiftnexus-nginx
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Monitoring - Prometheus (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: swiftnexus-prometheus
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+
+  # Monitoring - Grafana (Optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: swiftnexus-grafana
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-grafana_secure_password_2024}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+  # Backup Service - Production Ready
+  backup:
+    image: postgres:15-alpine
+    container_name: swiftnexus-backup
+    environment:
+      PGPASSWORD: ${DB_PASSWORD:-swiftnexus_secure_password_2024}
+    volumes:
+      - ./backups:/backups
+      - ./scripts/backup.sh:/backup.sh:ro
+    networks:
+      - swiftnexus-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    command: >
+      sh -c "
+        while true; do
+          echo 'Starting backup at $$(date)'
+          pg_dump -h postgres -U swiftnexus_user -d swiftnexus_prod > /backups/backup_$$(date +%Y%m%d_%H%M%S).sql
+          echo 'Backup completed at $$(date)'
+          find /backups -name 'backup_*.sql' -mtime +7 -delete
+          sleep 86400
+        done
+      "
+    profiles:
+      - backup
+
+# Persistent Volumes
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+# Network Configuration
+networks:
+  swiftnexus-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,0 +1,17 @@
+{
+  "name": "SwiftNexus Enterprise",
+  "short_name": "SwiftNexus",
+  "description": "Enterprise SWIFT Message Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a2332",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
+
