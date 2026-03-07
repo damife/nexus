@@ -31,9 +31,9 @@ export default defineConfig({
   },
 
   server: {
-    port: parseInt(process.env.VITE_PORT || '3000'),
+    port: 3000,
     host: true,
-    strictPort: false,
+    strictPort: true,
     proxy: {
       '/api': {
         target: process.env.VITE_API_URL || 'http://localhost:5000',
@@ -64,4 +64,7 @@ export default defineConfig({
   },
   
   envPrefix: 'VITE_',
+  
+  // Fix NODE_ENV production issue
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development'
 })
