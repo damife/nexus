@@ -35,6 +35,7 @@ export default defineConfig({
     host: true,
     strictPort: true,
     allowedHosts: ['swiftnexus.org', 'localhost', '209.74.85.100'],
+    historyApiFallback: true,
     proxy: {
       '/api': {
         target: process.env.VITE_API_URL || 'http://localhost:5000',
