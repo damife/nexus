@@ -50,6 +50,14 @@ export default defineConfig({
     }
   },
 
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+
   preview: {
     port: parseInt(process.env.VITE_PREVIEW_PORT || '4173'),
     host: true,
