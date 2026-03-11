@@ -134,7 +134,7 @@ function getCareerIcon(title) {
 // Apply for position
 function applyForPosition(careerId) {
   // Redirect to application form or open modal
-  window.location.href = 'apply.html?career=' + careerId;
+  window.location.href = 'apply?career=' + careerId;
 }
 
 // Display error message

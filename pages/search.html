@@ -64,7 +64,7 @@
     <nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="../index.html" class="flex items-center space-x-2">
+                <a href="../index" class="flex items-center space-x-2">
                     <i class="bi bi-diagram-3-fill text-2xl text-emerald-600"></i>
                     <span class="text-lg sm:text-xl font-bold text-gray-900">SwiftNexus</span>
                     <span class="hidden sm:inline-block text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-semibold">Enterprise</span>
@@ -86,7 +86,7 @@
 
                 <div class="hidden lg:flex items-center space-x-6">
                     <!-- Navigation items would go here -->
-                    <a href="../index.html" class="text-emerald-600 font-semibold hover:text-emerald-700">Home</a>
+                    <a href="../index" class="text-emerald-600 font-semibold hover:text-emerald-700">Home</a>
                 </div>
 
                 <!-- Mobile menu button -->
@@ -219,7 +219,7 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-10">
                 <!-- Footer content would go here -->
                 <div>
-                    <a href="../index.html" class="flex items-center space-x-2 mb-3">
+                    <a href="../index" class="flex items-center space-x-2 mb-3">
                         <i class="bi bi-diagram-3-fill text-2xl text-white"></i>
                         <span class="text-xl font-bold">SwiftNexus</span>
                     </a>
@@ -389,16 +389,16 @@
         // Get result URL
         function getResultUrl(result) {
             const urlMap = {
-                'blog': `blog.html#${result.slug || result.id}`,
-                'news': `../company/news.html#${result.slug || result.id}`,
-                'event': `events-webinars.html#${result.slug || result.id}`,
-                'webinar': `events-webinars.html#${result.slug || result.id}`,
-                'video': `videos.html#${result.slug || result.id}`,
-                'case-study': `case-studies.html#${result.slug || result.id}`,
-                'white-paper': `white-papers.html#${result.slug || result.id}`,
-                'report': `reports.html#${result.slug || result.id}`,
-                'glossary': `glossary.html#${result.slug || result.id}`,
-                'leadership': `../company/leadership.html#${result.slug || result.id}`
+                'blog': `blog#${result.slug || result.id}`,
+                'news': `../company/news#${result.slug || result.id}`,
+                'event': `events-webinars#${result.slug || result.id}`,
+                'webinar': `events-webinars#${result.slug || result.id}`,
+                'video': `videos#${result.slug || result.id}`,
+                'case-study': `case-studies#${result.slug || result.id}`,
+                'white-paper': `white-papers#${result.slug || result.id}`,
+                'report': `reports#${result.slug || result.id}`,
+                'glossary': `glossary#${result.slug || result.id}`,
+                'leadership': `../company/leadership#${result.slug || result.id}`
             };
             return urlMap[result.contentType] || '#';
         }
