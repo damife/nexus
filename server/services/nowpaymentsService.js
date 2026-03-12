@@ -31,22 +31,33 @@ class NowPaymentsService {
       );
 
       result.rows.forEach(row => {
-        const value = JSON.parse(row.value);
+        // Handle JSONB column - if value is already a string, use it directly
+        // If it's a JSON object/string, parse it
+        let value;
+        if (typeof row.value === 'string') {
+          value = row.value;
+        } else {
+          value = JSON.stringify(row.value);
+        }
+        
+        // Parse the JSON string
+        const parsedValue = JSON.parse(value);
+        
         switch(row.key) {
           case 'nowpayments_api_key':
-            this.apiKey = value;
+            this.apiKey = parsedValue;
             break;
           case 'nowpayments_ipn_secret':
-            this.ipnSecret = value;
+            this.ipnSecret = parsedValue;
             break;
           case 'nowpayments_payout_wallet':
-            this.payoutWallet = value;
+            this.payoutWallet = parsedValue;
             break;
           case 'nowpayments_payout_currency':
-            this.payoutCurrency = value;
+            this.payoutCurrency = parsedValue;
             break;
           case 'default_currency':
-            this.defaultCurrency = value || 'USD';
+            this.defaultCurrency = parsedValue || 'USD';
             break;
         }
       });
