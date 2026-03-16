@@ -1012,27 +1012,6 @@
   </script>
 
   <script>
-    // Mobile Menu Functionality
-    document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
-      const menu = document.getElementById('mobileMenu');
-      const icon = document.getElementById('mobileMenuIcon');
-      
-      if (menu) {
-        menu.classList.toggle('hidden');
-        
-        // Toggle between hamburger and X icon
-        if (icon) {
-          if (menu.classList.contains('hidden')) {
-            icon.classList.remove('bi-x-lg');
-            icon.classList.add('bi-list');
-          } else {
-            icon.classList.remove('bi-list');
-            icon.classList.add('bi-x-lg');
-          }
-        }
-      }
-    });
-
     // Mobile Dropdown Toggle Function
     function toggleMobileDropdown(dropdownId) {
       const dropdown = document.getElementById(dropdownId);

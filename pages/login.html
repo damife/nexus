@@ -827,6 +827,32 @@
     if (copyrightEl) {
       copyrightEl.textContent = `2018 - ${currentYear}`;
     }
+
+    // Next Button Functionality
+    const nextBtn = document.getElementById('nextBtn');
+    const loginEmail = document.getElementById('loginEmail');
+    const passwordSection = document.getElementById('passwordSection');
+    
+    if (nextBtn && loginEmail && passwordSection) {
+      nextBtn.addEventListener('click', function() {
+        const email = loginEmail.value.trim();
+        if (email) {
+          // Show password section
+          passwordSection.classList.remove('hidden');
+          // Focus on password field
+          const passwordField = document.getElementById('loginPassword');
+          if (passwordField) {
+            passwordField.focus();
+          }
+        } else {
+          // Show error for empty email
+          loginEmail.classList.add('border-red-500');
+          setTimeout(() => {
+            loginEmail.classList.remove('border-red-500');
+          }, 2000);
+        }
+      });
+    }
   </script>
   <script src="/secure/secure.js" defer></script>
   <script>
