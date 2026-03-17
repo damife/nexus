@@ -112,29 +112,45 @@ async function fetchWithTimeout(url, options = {}, timeout = CONFIG.LOGIN_TIMEOU
   }
 }
 
-// Enhanced error handling
+// Comprehensive error handling with user-friendly messages
 function handleApiError(error, context = 'login') {
-  console.error(`Error in ${context}:`, error);
-  
+  console.error('Error in ' + context + ':', error);
+  var msg = error && error.message ? error.message : '';
+
   if (error.name === 'AbortError') {
-    return 'Request timeout. Please check your connection and try again.';
+    return 'Request timed out. Please check your connection and try again.';
   }
-  
-  if (error.message.includes('Failed to fetch')) {
-    return 'Network error. Please check your internet connection.';
+  if (msg.indexOf('Failed to fetch') !== -1 || msg.indexOf('NetworkError') !== -1) {
+    return 'Cannot reach the server. Check your internet connection and that the site is running.';
   }
-  
-  if (error.message.includes('CORS')) {
-    return 'Network error. Please contact support if this persists.';
+  if (msg.indexOf('CORS') !== -1) {
+    return 'Connection was blocked. Please try again or contact support.';
   }
-  
-  return error.message || 'An unexpected error occurred. Please try again.';
+  if (msg.indexOf('timeout') !== -1) {
+    return 'Request timed out. Please try again.';
+  }
+  if (msg.indexOf('Wrong username or password') !== -1 || msg.indexOf('Invalid credentials') !== -1) {
+    return 'Wrong username or password. Please try again.';
+  }
+  if (msg.indexOf('Email not verified') !== -1 || msg.indexOf('email_verified') !== -1) {
+    return 'Please verify your email address before signing in.';
+  }
+  if (msg.indexOf('banned') !== -1 || msg.indexOf('blocked') !== -1) {
+    return 'This account is not active. Please contact support.';
+  }
+  if (msg.indexOf('2FA') !== -1 || msg.indexOf('twoFactor') !== -1) {
+    return 'Two-factor authentication is required. Please use the full login flow.';
+  }
+  if (msg.indexOf('401') !== -1 || msg.indexOf('403') !== -1 || msg.indexOf('500') !== -1) {
+    return msg || 'Login failed. Please try again or contact support.';
+  }
+  return msg || 'An unexpected error occurred. Please try again.';
 }
 
-// Session management
+// Session management (support both token/user and swift_token/swift_user for React)
 function validateSession() {
-  const token = localStorage.getItem('token');
-  const user = localStorage.getItem('user');
+  const token = localStorage.getItem('token') || localStorage.getItem('swift_token');
+  const user = localStorage.getItem('user') || localStorage.getItem('swift_user');
   const loginTime = localStorage.getItem('loginTime');
   
   if (!token || !user || !loginTime) {
@@ -142,7 +158,7 @@ function validateSession() {
   }
   
   // Check session timeout
-  const sessionAge = Date.now() - parseInt(loginTime);
+  const sessionAge = Date.now() - parseInt(loginTime, 10);
   if (sessionAge > CONFIG.SESSION_TIMEOUT) {
     clearSession();
     return false;
@@ -155,12 +171,16 @@ function clearSession() {
   localStorage.removeItem('token');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
+  localStorage.removeItem('swift_token');
+  localStorage.removeItem('swift_user');
   localStorage.removeItem('loginTime');
 }
 
 function setSession(token, refreshToken, user) {
+  localStorage.setItem('swift_token', token);
   localStorage.setItem('token', token);
   localStorage.setItem('refreshToken', refreshToken || '');
+  localStorage.setItem('swift_user', JSON.stringify(user));
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('loginTime', Date.now().toString());
 }
@@ -225,22 +245,14 @@ async function performLogin(loginData) {
       // Check if this is an idempotent response
       if (data.idempotent) {
         showMessage('Login request already processed. Redirecting...', 'success');
-        if (data.data?.user) {
+        if (data.data && data.data.user) {
           setSession(data.data.token, data.data.refreshToken, data.data.user);
-          
-          // Dispatch event for React app
-          window.dispatchEvent(new CustomEvent('login-success', { 
-            detail: { 
-              token: data.data.token, 
-              refreshToken: data.data.refreshToken, 
-              user: data.data.user 
-            } 
+          window.dispatchEvent(new CustomEvent('login-success', {
+            detail: { token: data.data.token, refreshToken: data.data.refreshToken, user: data.data.user }
           }));
-
-          // Redirect based on user role
-          setTimeout(() => {
+          setTimeout(function() {
             if (data.data.user.role === 'admin' || data.data.user.is_admin) {
-              window.location.href = '/admin';
+              window.location.href = '/swiftadmin/admin/dashboard';
             } else {
               window.location.href = '/user';
             }
@@ -248,7 +260,13 @@ async function performLogin(loginData) {
         }
         return;
       }
-      throw new Error(data.error || 'Login failed');
+      // Map API error to user-friendly message
+      var apiMsg = (data.error || data.message || '').toString();
+      if (response.status === 401) apiMsg = apiMsg || 'Wrong username or password.';
+      if (response.status === 403) apiMsg = apiMsg || 'Access denied. Account may be inactive or email unverified.';
+      if (response.status === 500) apiMsg = 'Server error. Please try again later.';
+      showMessage(apiMsg || 'Login failed. Please try again.', 'error');
+      return;
     }
 
     // Store session data
@@ -266,10 +284,10 @@ async function performLogin(loginData) {
     // Show success message
     showMessage('Login successful! Redirecting...', 'success');
 
-    // Redirect based on user role
-    setTimeout(() => {
+    // Redirect based on user role (match React routes)
+    setTimeout(function() {
       if (data.user.role === 'admin' || data.user.is_admin) {
-        window.location.href = '/admin';
+        window.location.href = '/swiftadmin/admin/dashboard';
       } else {
         window.location.href = '/user';
       }
@@ -315,18 +333,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const togglePassword = document.getElementById('togglePassword');
   const eyeIcon = document.getElementById('eyeIcon');
 
-  // Check if user is already logged in (Production-ready)
-  if (validateSession()) {
+  // Check if user is already logged in (Production-ready) - support both token and swift_token
+  var storedUser = localStorage.getItem('user') || localStorage.getItem('swift_user');
+  var storedToken = localStorage.getItem('token') || localStorage.getItem('swift_token');
+  if (storedToken && storedUser) {
     try {
-      const userData = JSON.parse(localStorage.getItem('user'));
-      // Redirect to appropriate dashboard
+      const userData = JSON.parse(storedUser);
       if (userData.role === 'admin' || userData.is_admin) {
-        window.location.href = '/admin/dashboard';
+        window.location.href = '/swiftadmin/admin/dashboard';
       } else {
-        window.location.href = '/user/dashboard';
+        window.location.href = '/user';
       }
+      return;
     } catch (e) {
-      // Invalid user data, clear storage
       clearSession();
     }
   }
@@ -358,10 +377,27 @@ document.addEventListener('DOMContentLoaded', function() {
         })
       });
 
-      const data = await response.json();
+      var data = {};
+      try {
+        data = await response.json();
+      } catch (e) {
+        showMessage('Server returned an invalid response. Please try again.', 'error');
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Next';
+        return;
+      }
 
-      if (!response.ok || !data.exists) {
-        // Don't reveal if user exists or not for security
+      if (!response.ok) {
+        if (response.status >= 500) {
+          showMessage('Server is temporarily unavailable. Please try again in a moment.', 'error');
+        } else {
+          showMessage(data.error || data.message || 'Something went wrong. Please try again.', 'error');
+        }
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Next';
+        return;
+      }
+      if (!data.exists) {
         showMessage('Invalid credentials. Please check your username and password.', 'error');
         nextBtn.disabled = false;
         nextBtn.textContent = 'Next';

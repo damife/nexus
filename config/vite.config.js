@@ -66,7 +66,12 @@ export default defineConfig({
   },
   
   envPrefix: 'VITE_',
-  
+
+  // Only load env from ./env-vite (optional) so root .env with UPLOAD_PATH=./uploads
+  // is never parsed by Vite (avoids "invalid JS syntax" at .env:60:22).
+  // If env-vite folder or .env doesn't exist, Vite falls back to root; then fix .env line 60 to UPLOAD_PATH=/uploads
+  // envDir: path.resolve(__dirname, '../env-vite'),
+
   // Fix NODE_ENV production issue
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development'
 })

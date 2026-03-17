@@ -750,16 +750,14 @@
   </nav>
 
   <script>
-    // Mobile Menu Functionality
-    document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
-      const menu = document.getElementById('mobileMenu');
-      const icon = document.getElementById('mobileMenuIcon');
-      
-      if (menu) {
-        menu.classList.toggle('hidden');
-        
-        // Toggle between hamburger and X icon
-        if (icon) {
+    (function() {
+      function initMobileMenu() {
+        var toggle = document.getElementById('mobileMenuToggle');
+        var menu = document.getElementById('mobileMenu');
+        var icon = document.getElementById('mobileMenuIcon');
+        if (!toggle || !menu || !icon) return;
+        toggle.addEventListener('click', function() {
+          menu.classList.toggle('hidden');
           if (menu.classList.contains('hidden')) {
             icon.classList.remove('bi-x-lg');
             icon.classList.add('bi-list');
@@ -767,9 +765,18 @@
             icon.classList.remove('bi-list');
             icon.classList.add('bi-x-lg');
           }
-        }
+        });
+        // Close menu when clicking a link inside (e.g. after navigation)
+        menu.querySelectorAll('a').forEach(function(a) {
+          a.addEventListener('click', function() { menu.classList.add('hidden'); icon.classList.remove('bi-x-lg'); icon.classList.add('bi-list'); });
+        });
       }
-    });
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMobileMenu);
+      } else {
+        initMobileMenu();
+      }
+    })();
 
     // Mobile Dropdown Toggle Function
     function toggleMobileDropdown(dropdownId) {

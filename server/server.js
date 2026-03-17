@@ -76,7 +76,7 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3001',
   credentials: true
 }));
 
@@ -87,7 +87,13 @@ app.use('/api/', generalRateLimit);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files for user login page only
+// SPA fallback FIRST: so /install and /swiftadmin/* always get the React app (no redirect to homepage)
+const indexPath = path.join(__dirname, '..', 'index.html');
+app.get(/^\/(admin|user|install|swiftadmin)(\/.*)?$/, (req, res) => {
+  res.sendFile(indexPath);
+});
+
+// Serve static files (pages, assets, etc.)
 app.use(express.static(path.join(__dirname, '..')));
 
 app.use('/api/installer', installerRoutes);

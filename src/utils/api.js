@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+// Same-origin in browser (/api); override with VITE_API_URL if API is on another host
+const API_BASE_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) ||
+  (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) ||
+  (typeof window !== 'undefined' ? '/api' : 'http://localhost:5000/api')
 
 // Create axios instance with default config
 const api = axios.create({
