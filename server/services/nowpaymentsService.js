@@ -26,24 +26,22 @@ class NowPaymentsService {
   async loadConfig() {
     try {
       const result = await query(
-        'SELECT key, value FROM system_settings WHERE key IN ($1, $2, $3, $4, $5)',
+        'SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ($1, $2, $3, $4, $5)',
         ['nowpayments_api_key', 'nowpayments_ipn_secret', 'nowpayments_payout_wallet', 'nowpayments_payout_currency', 'default_currency']
       );
 
       result.rows.forEach(row => {
-        // Handle JSONB column - if value is already a string, use it directly
-        // If it's a JSON object/string, parse it
-        let value;
-        if (typeof row.value === 'string') {
-          value = row.value;
-        } else {
-          value = JSON.stringify(row.value);
+        const key = row.setting_key;
+        let parsedValue = row.setting_value;
+        if (typeof parsedValue === 'string' && (parsedValue.startsWith('"') || parsedValue.startsWith('{') || parsedValue.startsWith('['))) {
+          try { parsedValue = JSON.parse(parsedValue); } catch (_) {}
         }
-        
-        // Parse the JSON string
-        const parsedValue = JSON.parse(value);
-        
-        switch(row.key) {
+        if (typeof parsedValue === 'object' && parsedValue !== null && 'value' in parsedValue) {
+          parsedValue = parsedValue.value;
+        }
+        parsedValue = parsedValue === undefined || parsedValue === null ? '' : String(parsedValue);
+
+        switch(key) {
           case 'nowpayments_api_key':
             this.apiKey = parsedValue;
             break;

@@ -18,7 +18,7 @@ class EmailService {
   async loadConfig() {
     try {
       const result = await query(`
-        SELECT setting_value FROM system_settings 
+        SELECT setting_key, setting_value FROM system_settings 
         WHERE setting_key IN ('resend_api_key', 'resend_from_email')
       `);
 

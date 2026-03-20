@@ -221,55 +221,55 @@ router.post('/install', async (req, res) => {
       `, [adminConfig.name, adminConfig.email, hashedPassword, 'admin', 'active', true, false]);
     }
 
-    // Save SMTP configuration
+    // Save SMTP configuration (initDatabase uses setting_key, setting_value schema)
     if (smtpConfig && smtpConfig.host) {
       await installPool.query(`
-        INSERT INTO system_settings (key, value, description, is_public)
+        INSERT INTO system_settings (setting_key, setting_value, setting_type, category, description)
         VALUES 
-          ('smtp_host', $1, 'SMTP server host', false),
-          ('smtp_port', $2, 'SMTP server port', false),
-          ('smtp_secure', $3, 'Use SSL/TLS for SMTP', false),
-          ('smtp_user', $4, 'SMTP username', false),
-          ('smtp_password', $5, 'SMTP password', false),
-          ('smtp_from_email', $6, 'From email address', true),
-          ('smtp_from_name', $7, 'From display name', true)
-        ON CONFLICT (key) DO UPDATE SET 
-          value = EXCLUDED.value,
+          ('smtp_host', $1, 'string', 'email', 'SMTP server host'),
+          ('smtp_port', $2, 'string', 'email', 'SMTP server port'),
+          ('smtp_secure', $3, 'string', 'email', 'Use SSL/TLS for SMTP'),
+          ('smtp_user', $4, 'string', 'email', 'SMTP username'),
+          ('smtp_password', $5, 'string', 'email', 'SMTP password'),
+          ('resend_from_email', $6, 'string', 'email', 'From email address'),
+          ('smtp_from_name', $7, 'string', 'email', 'From display name')
+        ON CONFLICT (setting_key) DO UPDATE SET 
+          setting_value = EXCLUDED.setting_value,
           updated_at = CURRENT_TIMESTAMP
       `, [
-        JSON.stringify(smtpConfig.host),
-        JSON.stringify(smtpConfig.port || ''),
-        JSON.stringify(smtpConfig.secure || false),
-        JSON.stringify(smtpConfig.user || ''),
-        JSON.stringify(smtpConfig.password || ''),
-        JSON.stringify(smtpConfig.fromEmail || ''),
-        JSON.stringify(smtpConfig.fromName || '')
+        String(smtpConfig.host || ''),
+        String(smtpConfig.port || ''),
+        String(smtpConfig.secure || false),
+        String(smtpConfig.user || ''),
+        String(smtpConfig.password || ''),
+        String(smtpConfig.fromEmail || ''),
+        String(smtpConfig.fromName || '')
       ]);
     }
 
-    // Save payment configuration
+    // Save payment configuration (initDatabase uses setting_key, setting_value schema)
     if (paymentConfig) {
       await installPool.query(`
-        INSERT INTO system_settings (key, value, description, is_public)
+        INSERT INTO system_settings (setting_key, setting_value, setting_type, category, description)
         VALUES 
-          ('nowpayments_enabled', $1, 'Enable NowPayments crypto payments', false),
-          ('nowpayments_api_key', $2, 'NowPayments API key', false),
-          ('nowpayments_ipn_secret', $3, 'NowPayments IPN secret key', false),
-          ('nowpayments_payout_wallet', $4, 'Payout wallet address', false),
-          ('nowpayments_payout_currency', $5, 'Payout wallet currency', false),
-          ('default_currency', $6, 'Default currency', true),
-          ('default_price', $7, 'Default subscription price', true)
-        ON CONFLICT (key) DO UPDATE SET 
-          value = EXCLUDED.value,
+          ('nowpayments_enabled', $1, 'string', 'payment', 'Enable NowPayments crypto payments'),
+          ('nowpayments_api_key', $2, 'string', 'payment', 'NowPayments API key'),
+          ('nowpayments_ipn_secret', $3, 'string', 'payment', 'NowPayments IPN secret key'),
+          ('nowpayments_payout_wallet', $4, 'string', 'payment', 'Payout wallet address'),
+          ('nowpayments_payout_currency', $5, 'string', 'payment', 'Payout wallet currency'),
+          ('default_currency', $6, 'string', 'payment', 'Default currency'),
+          ('default_price', $7, 'string', 'payment', 'Default subscription price')
+        ON CONFLICT (setting_key) DO UPDATE SET 
+          setting_value = EXCLUDED.setting_value,
           updated_at = CURRENT_TIMESTAMP
       `, [
-        JSON.stringify(paymentConfig.nowpaymentsEnabled || false),
-        JSON.stringify(paymentConfig.nowpaymentsApiKey || ''),
-        JSON.stringify(paymentConfig.nowpaymentsIpnSecret || ''),
-        JSON.stringify(paymentConfig.payoutWalletAddress || ''),
-        JSON.stringify(paymentConfig.payoutWalletCurrency || ''),
-        JSON.stringify(paymentConfig.defaultCurrency || ''),
-        JSON.stringify(paymentConfig.defaultPrice || '')
+        String(paymentConfig.nowpaymentsEnabled || false),
+        String(paymentConfig.nowpaymentsApiKey || ''),
+        String(paymentConfig.nowpaymentsIpnSecret || ''),
+        String(paymentConfig.payoutWalletAddress || ''),
+        String(paymentConfig.payoutWalletCurrency || ''),
+        String(paymentConfig.defaultCurrency || ''),
+        String(paymentConfig.defaultPrice || '')
       ]);
     }
 

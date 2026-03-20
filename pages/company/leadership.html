@@ -1194,23 +1194,6 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Mobile menu toggle
-      document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
-        const menu = document.getElementById('mobileMenu');
-        if (menu) menu.classList.toggle('hidden');
-      });
-
-      // Copyright year
-      const currentYear = new Date().getFullYear();
-      const copyrightEl = document.getElementById('copyrightYear');
-      if (copyrightEl) {
-        copyrightEl.textContent = `2018 - ${currentYear}`;
-      }
-    });
-  </script>
-
-  <script>
     // Comprehensive copyright year update
     document.addEventListener('DOMContentLoaded', function() {
       const currentYear = new Date().getFullYear();

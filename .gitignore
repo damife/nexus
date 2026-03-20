@@ -62,7 +62,7 @@ temp/
 # Database
 *.sqlite
 *.sqlite3
-*.db
+
 
 # Uploads and user-generated content
 
@@ -104,20 +104,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Documentation files
+# Documentation files (excluded for deployment - add back later if needed)
 *.md
-!README.md
-!CHANGELOG.md
-!LICENSE.md
-!UBUNTU_VM_STARTUP_GUIDE.md
-!UBUNTU_VERSION_COMPARISON.md
-!SSH_KEY_SETUP_GUIDE.md
-!DEPLOYMENT_PLATFORM_COMPARISON.md
-!UBUNTU_COMPLETE_DEPLOYMENT_SCRIPT.md
-!PROJECT_HEALTH_CHECK_REPORT.md
-!UBUNTU_QUICK_DEPLOY.md
-!UBUNTU_DEPLOYMENT_COMPLETE_GUIDE.md
-!DOCKER_DEPLOYMENT_GUIDE.md
-!DOCKER_USAGE_GUIDE.md
-!PUTTY_EASY_SETUP_GUIDE.md
-!PUTTY_COMMANDS_ONLY.md

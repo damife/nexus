@@ -163,10 +163,13 @@ app.get('/api/health', (req, res) => {
 
 async function startServer() {
   try {
-    // Skip full database initialization for now - use minimal setup
-    console.log('🗄️ Using minimal database setup...');
-    // await initDatabase(); // Commented out to avoid full DB init issues
-    logger.info('Database connection established');
+    // Initialize database (creates tables if not exist)
+    try {
+      await initDatabase();
+      logger.info('Database initialized successfully');
+    } catch (dbErr) {
+      logger.warn('Database init skipped or failed - tables may already exist', { error: dbErr.message });
+    }
 
     await messageQueue.connect();
 
