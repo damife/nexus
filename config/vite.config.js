@@ -63,7 +63,7 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'axios']
+    include: ['react', 'react-dom', 'react-router-dom', 'axios', 'react-toastify', 'lucide-react']
   },
 
   define: {

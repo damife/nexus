@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import api from '../../utils/api'
-import ErrorModal from '../../components/ErrorModal'
-import SuccessModal from '../../components/SuccessModal'
-import { Card, Button, Input, Badge } from '../../components/UIComponents'
+import api from '../utils/api'
+import ErrorModal from './ErrorModal'
+import SuccessModal from './SuccessModal'
+import { Card, Button, Input, Badge } from './UIComponents'
 
 const SwiftMessageInputEnhanced = ({ onMessageSent, initialData = {} }) => {
   const [loading, setLoading] = useState(false)

@@ -234,9 +234,15 @@ resolve_port_conflict() {
     echo ""
 }
 
-# Production: build frontend so backend can serve React app at /install, /swiftadmin
+# Production: install deps and build frontend so backend can serve React app at /install, /swiftadmin
 if [ "$MODE" = "production" ]; then
-    echo -e "${BLUE}[4/5]${NC} Building frontend (required for /install, /swiftadmin)..."
+    echo -e "${BLUE}[4/5]${NC} Ensuring frontend dependencies (npm install)..."
+    npm install
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}ERROR: npm install failed!${NC}"
+        exit 1
+    fi
+    echo -e "${BLUE}Building frontend (required for /install, /swiftadmin)...${NC}"
     npm run build
     if [ $? -ne 0 ]; then
         echo -e "${RED}ERROR: Frontend build failed!${NC}"
