@@ -87,11 +87,22 @@ app.use('/api/', generalRateLimit);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// SPA fallback FIRST: so /install and /swiftadmin/* always get the React app (no redirect to homepage)
-const indexPath = path.join(__dirname, '..', 'index.html');
+// SPA fallback: serve React app for /install, /swiftadmin, /admin, /user
+// Use dist/app.html if built, else fallback to root index (for dev without build)
+const distAppPath = path.join(__dirname, '..', 'dist', 'app.html');
+const rootIndexPath = path.join(__dirname, '..', 'index.html');
+const fs = require('fs');
+
 app.get(/^\/(admin|user|install|swiftadmin)(\/.*)?$/, (req, res) => {
-  res.sendFile(indexPath);
+  const appPath = fs.existsSync(distAppPath) ? distAppPath : rootIndexPath;
+  res.sendFile(appPath);
 });
+
+// Serve built React assets from dist (before project root so hashed JS/CSS are found)
+const distPath = path.join(__dirname, '..', 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+}
 
 // Serve static files (pages, assets, etc.)
 app.use(express.static(path.join(__dirname, '..')));

@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Layout from '../../components/Layout'
 import AdminLanding from './Landing'
-import AdminDashboard from './AdminDashboard'
+import AdminDashboardInner from './AdminDashboard'
 import Banks from './Banks'
 import Users from './Users'
 import Monitoring from './Monitoring'
@@ -40,7 +40,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     <Layout user={user} onLogout={onLogout} role="admin">
       <Routes>
         <Route index element={<AdminLanding />} />
-        <Route path="dashboard" element={<AdminDashboard user={user} onLogout={onLogout} />} />
+        <Route path="dashboard" element={<AdminDashboardInner user={user} onLogout={onLogout} />} />
         <Route path="tenants" element={<TenantManagement />} />
         <Route path="content" element={<ContentManagement />} />
         <Route path="videos" element={<VideoManagement />} />

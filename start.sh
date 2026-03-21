@@ -234,8 +234,20 @@ resolve_port_conflict() {
     echo ""
 }
 
+# Production: build frontend so backend can serve React app at /install, /swiftadmin
+if [ "$MODE" = "production" ]; then
+    echo -e "${BLUE}[4/5]${NC} Building frontend (required for /install, /swiftadmin)..."
+    npm run build
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}ERROR: Frontend build failed!${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}Frontend built successfully.${NC}"
+    echo ""
+fi
+
 # Check if ports are available (or kill listeners after confirmation)
-echo -e "${BLUE}[4/5]${NC} Checking if ports are available..."
+echo -e "${BLUE}[5/5]${NC} Checking if ports are available..."
 
 resolve_port_conflict 5000 "backend API"
 resolve_port_conflict 3001 "frontend (Vite)"
@@ -243,7 +255,7 @@ resolve_port_conflict 3001 "frontend (Vite)"
 echo -e "${GREEN}Ports are available!${NC}"
 echo ""
 
-echo -e "${BLUE}[5/5]${NC} Starting servers..."
+echo -e "${BLUE}Starting servers...${NC}"
 echo ""
 
 # Create a trap to kill all child processes on exit

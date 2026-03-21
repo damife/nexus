@@ -40,16 +40,21 @@ router.post('/deposit', authenticate, sanitizeRequestBody, validatePayment, ...p
       return res.status(400).json({ success: false, message: 'Invalid amount' });
     }
 
-    // Get NowPayments configuration from database
+    // Get NowPayments configuration from database (setting_key/setting_value)
     const configResult = await query(
-      'SELECT value FROM system_settings WHERE key IN ($1, $2, $3, $4, $5, $6)',
+      'SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ($1, $2, $3, $4, $5, $6)',
       ['nowpayments_api_key', 'nowpayments_ipn_secret', 'nowpayments_payout_wallet', 'nowpayments_payout_currency', 'default_currency', 'default_price']
     );
 
     const config = {};
     configResult.rows.forEach(row => {
-      const key = row.key.replace('nowpayments_', '').replace('default_', '');
-      config[key] = JSON.parse(row.value);
+      let val = row.setting_value;
+      if (typeof val === 'string' && (val.startsWith('"') || val.startsWith('{') || val.startsWith('['))) {
+        try { val = JSON.parse(val); } catch (_) {}
+      }
+      if (typeof val === 'object' && val !== null && 'value' in val) val = val.value;
+      const key = row.setting_key.replace('nowpayments_', '').replace('default_', '');
+      config[key] = typeof val === 'string' ? val : (val || '');
     });
 
     if (!config.api_key) {
@@ -108,17 +113,21 @@ router.get('/status/:paymentId', authenticate, async (req, res) => {
   try {
     const { paymentId } = req.params;
     
-    // Get NowPayments configuration
+    // Get NowPayments configuration (setting_key/setting_value)
     const configResult = await query(
-      'SELECT value FROM system_settings WHERE key = $1',
+      'SELECT setting_value FROM system_settings WHERE setting_key = $1',
       ['nowpayments_api_key']
     );
 
-    if (configResult.rows.length === 0) {
+    if (configResult.rows.length === 0 || !configResult.rows[0].setting_value) {
       return res.status(400).json({ success: false, message: 'NowPayments not configured' });
     }
 
-    const apiKey = JSON.parse(configResult.rows[0].value);
+    let apiKey = configResult.rows[0].setting_value;
+    if (typeof apiKey === 'string' && (apiKey.startsWith('"') || apiKey.startsWith('{'))) {
+      try { apiKey = JSON.parse(apiKey); } catch (_) {}
+    }
+    if (typeof apiKey === 'object' && apiKey !== null && 'value' in apiKey) apiKey = apiKey.value;
     const nowPaymentsService = new NowPaymentsService(apiKey);
     
     const status = await nowPaymentsService.getPaymentStatus(paymentId);
@@ -151,18 +160,22 @@ router.post('/ipn', async (req, res) => {
       return res.status(400).send('Missing signature');
     }
 
-    // Get IPN secret from database
+    // Get IPN secret from database (setting_key/setting_value)
     const configResult = await query(
-      'SELECT value FROM system_settings WHERE key = $1',
+      'SELECT setting_value FROM system_settings WHERE setting_key = $1',
       ['nowpayments_ipn_secret']
     );
 
-    if (configResult.rows.length === 0) {
+    if (configResult.rows.length === 0 || !configResult.rows[0].setting_value) {
       logger.error('IPN secret not configured');
       return res.status(400).send('IPN secret not configured');
     }
 
-    const ipnSecret = JSON.parse(configResult.rows[0].value);
+    let ipnSecret = configResult.rows[0].setting_value;
+    if (typeof ipnSecret === 'string' && (ipnSecret.startsWith('"') || ipnSecret.startsWith('{'))) {
+      try { ipnSecret = JSON.parse(ipnSecret); } catch (_) {}
+    }
+    if (typeof ipnSecret === 'object' && ipnSecret !== null && 'value' in ipnSecret) ipnSecret = ipnSecret.value;
     const nowPaymentsService = new NowPaymentsService(null, ipnSecret);
 
     // Validate IPN signature
@@ -224,17 +237,21 @@ router.post('/ipn', async (req, res) => {
  */
 router.get('/currencies', authenticate, async (req, res) => {
   try {
-    // Get NowPayments configuration
+    // Get NowPayments configuration (setting_key/setting_value)
     const configResult = await query(
-      'SELECT value FROM system_settings WHERE key = $1',
+      'SELECT setting_value FROM system_settings WHERE setting_key = $1',
       ['nowpayments_api_key']
     );
 
-    if (configResult.rows.length === 0) {
+    if (configResult.rows.length === 0 || !configResult.rows[0].setting_value) {
       return res.status(400).json({ success: false, message: 'NowPayments not configured' });
     }
 
-    const apiKey = JSON.parse(configResult.rows[0].value);
+    let apiKey = configResult.rows[0].setting_value;
+    if (typeof apiKey === 'string' && (apiKey.startsWith('"') || apiKey.startsWith('{'))) {
+      try { apiKey = JSON.parse(apiKey); } catch (_) {}
+    }
+    if (typeof apiKey === 'object' && apiKey !== null && 'value' in apiKey) apiKey = apiKey.value;
     const nowPaymentsService = new NowPaymentsService(apiKey);
     
     const currencies = await nowPaymentsService.getAvailableCurrencies();
@@ -294,17 +311,21 @@ router.get('/stats', authenticate, async (req, res) => {
       return res.status(403).json({ success: false, message: 'Admin access required' });
     }
 
-    // Get NowPayments configuration
+    // Get NowPayments configuration (setting_key/setting_value)
     const configResult = await query(
-      'SELECT value FROM system_settings WHERE key = $1',
+      'SELECT setting_value FROM system_settings WHERE setting_key = $1',
       ['nowpayments_api_key']
     );
 
-    if (configResult.rows.length === 0) {
+    if (configResult.rows.length === 0 || !configResult.rows[0].setting_value) {
       return res.status(400).json({ success: false, message: 'NowPayments not configured' });
     }
 
-    const apiKey = JSON.parse(configResult.rows[0].value);
+    let apiKey = configResult.rows[0].setting_value;
+    if (typeof apiKey === 'string' && (apiKey.startsWith('"') || apiKey.startsWith('{'))) {
+      try { apiKey = JSON.parse(apiKey); } catch (_) {}
+    }
+    if (typeof apiKey === 'object' && apiKey !== null && 'value' in apiKey) apiKey = apiKey.value;
     const nowPaymentsService = new NowPaymentsService(apiKey);
     
     const stats = await nowPaymentsService.getPaymentStats();
