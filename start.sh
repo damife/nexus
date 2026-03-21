@@ -1,8 +1,19 @@
 #!/bin/bash
 
-# SwiftNexus Enterprise - Enhanced Startup Script for Linux/macOS
+# SwiftNexus Enterprise - Startup Script for Linux/macOS
+#
 # Usage: ./start.sh [development|production]
 # Default: development
+#
+# Ports (must match nginx-pure-proxy.conf):
+#   - Backend:  5000 (API, /secure/secure.js, SPA fallback for /install, /swiftadmin, etc.)
+#   - Frontend: 3001 (Vite dev server - marketing pages, static assets)
+#
+# Requires: server/.env with DB_*, JWT_SECRET, CORS_ORIGIN
+# Production: Set CORS_ORIGIN=https://swiftnexus.org in server/.env
+#
+# If ports 5000/3001 are busy, you are asked: kill the service? (y/n)
+# Non-interactive (e.g. SSH one-liner): START_SH_KILL_PORTS=yes ./start.sh production
 
 echo "========================================"
 echo " SwiftNexus Enterprise - Enhanced Start"
@@ -66,35 +77,37 @@ fi
 # Check if .env file exists
 if [ ! -f "server/.env" ]; then
     echo -e "${YELLOW}[WARNING]${NC} server/.env file not found!"
-    echo "Creating default .env file..."
-    cat > server/.env << 'EOF'
+    echo "Creating default .env from server/.env.example..."
+    if [ -f "server/.env.example" ]; then
+        cp server/.env.example server/.env
+        echo -e "${YELLOW}Please edit server/.env and set DB_PASSWORD, JWT_SECRET, and other required values.${NC}"
+    else
+        [ "$MODE" = "production" ] && CORS_VAL="https://swiftnexus.org" || CORS_VAL="http://localhost:3001"
+        cat > server/.env << EOF
 # Server Configuration
 PORT=5000
 NODE_ENV=$MODE
 
-# JWT Secret (change this in production!)
+# Database (REQUIRED - edit these!)
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=swiftnexus
+DB_USER=postgres
+DB_PASSWORD=change_me
+
+# JWT (REQUIRED - use 32+ chars in production)
 JWT_SECRET=swiftnexus-secret-key-2024-change-this-in-production
 
-# Frontend URL
-if [ "$MODE" = "production" ]; then
-    FRONTEND_URL=https://yourdomain.com
-    CORS_ORIGIN=https://yourdomain.com
-else
-    FRONTEND_URL=http://localhost:3000
-    CORS_ORIGIN=http://localhost:3000
-fi
-
-# API Configuration
-API_VERSION=v1
-
-# CORS Configuration
-CORS_ORIGIN=$CORS_ORIGIN
+# CORS (frontend URL - matches nginx proxy)
+CORS_ORIGIN=$CORS_VAL
 
 # Security
 BCRYPT_ROUNDS=10
 JWT_EXPIRES_IN=24h
 EOF
-    echo -e "${GREEN}.env file created successfully!${NC}"
+        echo -e "${YELLOW}Please edit server/.env and set DB_PASSWORD, JWT_SECRET, and other required values.${NC}"
+    fi
+    echo -e "${GREEN}.env file created.${NC}"
     echo ""
 else
     echo -e "${GREEN}[OK]${NC} .env file exists, checking mode..."
@@ -106,32 +119,127 @@ else
     fi
 fi
 
-# Check if ports are available
+# --- Port helpers: detect listeners, optionally kill with yes/no ---
+# Match exact port (avoid :5000 matching :50001)
+_port_grep_pattern() {
+    echo ":${1}([^0-9]|\$)"
+}
+
+port_is_in_use() {
+    local port=$1
+    local pat
+    pat=$(_port_grep_pattern "$port")
+    if command -v lsof >/dev/null 2>&1 && lsof -Pi :"${port}" -sTCP:LISTEN -t >/dev/null 2>&1; then
+        return 0
+    fi
+    if command -v ss >/dev/null 2>&1 && ss -tlnp 2>/dev/null | grep -qE "$pat"; then
+        return 0
+    fi
+    if netstat -an 2>/dev/null | grep "LISTEN" | grep -qE "$pat"; then
+        return 0
+    fi
+    return 1
+}
+
+# Print PIDs listening on TCP port (one per line)
+get_listen_pids_on_port() {
+    local port=$1
+    local pids=""
+    if command -v lsof >/dev/null 2>&1; then
+        pids=$(lsof -ti :"${port}" -sTCP:LISTEN 2>/dev/null | tr '\n' ' ')
+    fi
+    if [ -z "$pids" ] && command -v ss >/dev/null 2>&1; then
+        pids=$(ss -tlnp 2>/dev/null | grep -E "$(_port_grep_pattern "$port")" | sed -n 's/.*pid=\([0-9]*\).*/\1/p' | sort -u | tr '\n' ' ')
+    fi
+    echo "$pids" | tr ' ' '\n' | grep -E '^[0-9]+$' | sort -u
+}
+
+show_port_listeners() {
+    local port=$1
+    echo -e "${CYAN}Processes using port ${port}:${NC}"
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -i :"${port}" -sTCP:LISTEN -n -P 2>/dev/null || true
+    fi
+    if command -v ss >/dev/null 2>&1; then
+        ss -tlnp 2>/dev/null | grep -E "$(_port_grep_pattern "$port")" || true
+    fi
+}
+
+kill_listeners_on_port() {
+    local port=$1
+    local pids
+    pids=$(get_listen_pids_on_port "$port")
+    if [ -z "$pids" ]; then
+        echo -e "${YELLOW}Could not resolve PIDs for port ${port}; trying fuser...${NC}"
+        if command -v fuser >/dev/null 2>&1; then
+            fuser -k "${port}/tcp" 2>/dev/null || true
+        fi
+        sleep 1
+        return 0
+    fi
+    for pid in $pids; do
+        if kill -0 "$pid" 2>/dev/null; then
+            echo "  Sending SIGTERM to PID $pid ..."
+            kill -TERM "$pid" 2>/dev/null || true
+        fi
+    done
+    sleep 2
+    # Still listening? force kill
+    if port_is_in_use "$port"; then
+        for pid in $pids; do
+            if kill -0 "$pid" 2>/dev/null; then
+                echo "  Sending SIGKILL to PID $pid ..."
+                kill -KILL "$pid" 2>/dev/null || true
+            fi
+        done
+        sleep 1
+    fi
+}
+
+# Ask to kill service on port, or auto-kill if START_SH_KILL_PORTS=yes (non-interactive)
+resolve_port_conflict() {
+    local port=$1
+    local label=$2
+
+    if ! port_is_in_use "$port"; then
+        return 0
+    fi
+
+    echo -e "${YELLOW}WARNING: Port ${port} (${label}) is already in use.${NC}"
+    show_port_listeners "$port"
+    echo ""
+
+    local kill_choice=""
+    if [ "${START_SH_KILL_PORTS:-}" = "yes" ] || [ "${START_SH_KILL_PORTS:-}" = "y" ]; then
+        kill_choice="y"
+        echo -e "${CYAN}START_SH_KILL_PORTS=yes — killing listener(s) on port ${port}.${NC}"
+    elif [ -t 0 ]; then
+        read -p "Kill the service(s) on port ${port} and continue? (y/n): " kill_choice
+    else
+        echo -e "${RED}No TTY. Set START_SH_KILL_PORTS=yes to auto-kill, or free port ${port} manually.${NC}"
+        exit 1
+    fi
+
+    if [ "$kill_choice" = "y" ] || [ "$kill_choice" = "Y" ]; then
+        kill_listeners_on_port "$port"
+        if port_is_in_use "$port"; then
+            echo -e "${RED}Port ${port} is still in use after kill attempt. Exiting.${NC}"
+            exit 1
+        fi
+        echo -e "${GREEN}Port ${port} is now free.${NC}"
+    else
+        echo "Startup cancelled (port ${port} left in use)."
+        exit 1
+    fi
+    echo ""
+}
+
+# Check if ports are available (or kill listeners after confirmation)
 echo -e "${BLUE}[4/5]${NC} Checking if ports are available..."
 
-# Check backend (port 5000)
-if lsof -Pi :5000 -sTCP:LISTEN -t >/dev/null 2>&1 || netstat -an 2>/dev/null | grep -q ":5000.*LISTEN"; then
-    echo -e "${YELLOW}WARNING: Port 5000 is already in use!${NC}"
-    echo "Please close the application using this port or choose a different port."
-    echo ""
-    read -p "Do you want to continue anyway? (y/n): " continue
-    if [ "$continue" != "y" ] && [ "$continue" != "Y" ]; then
-        echo "Startup cancelled."
-        exit 1
-    fi
-fi
+resolve_port_conflict 5000 "backend API"
+resolve_port_conflict 3001 "frontend (Vite)"
 
-# Check frontend (port 3000)
-if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1 || netstat -an 2>/dev/null | grep -q ":3000.*LISTEN"; then
-    echo -e "${YELLOW}WARNING: Port 3000 is already in use!${NC}"
-    echo "Please close the application using this port or choose a different port."
-    echo ""
-    read -p "Do you want to continue anyway? (y/n): " continue
-    if [ "$continue" != "y" ] && [ "$continue" != "Y" ]; then
-        echo "Startup cancelled."
-        exit 1
-    fi
-fi
 echo -e "${GREEN}Ports are available!${NC}"
 echo ""
 
@@ -161,7 +269,7 @@ sleep 3
 echo ""
 
 echo "========================================"
-echo " Starting Frontend Server (Port 3000)"
+echo " Starting Frontend Server (Port 3001)"
 echo "========================================"
 echo ""
 
@@ -183,15 +291,18 @@ echo "========================================"
 echo ""
 echo "Mode: $MODE"
 echo -e "${CYAN}Backend Server:${NC}  http://localhost:5000"
-echo -e "${CYAN}Frontend App:${NC}    http://localhost:3000"
+echo -e "${CYAN}Frontend App:${NC}    http://localhost:3001"
 echo -e "${CYAN}API Endpoint:${NC}    http://localhost:5000/api"
 if [ "$MODE" = "production" ]; then
     echo "Production URLs:"
-    echo "  Admin: https://yourdomain.com/admin"
-    echo "  Login: https://yourdomain.com/login"
+    echo "  Site:   https://swiftnexus.org"
+    echo "  Admin:  https://swiftnexus.org/swiftadmin/admin/dashboard"
+    echo "  Login:  https://swiftnexus.org/pages/login"
+    echo "  Install: https://swiftnexus.org/install"
 else
     echo "Development URLs:"
-    echo "  Login Page:      http://localhost:3000/pages/login"
+    echo "  Login Page:      http://localhost:3001/pages/login"
+    echo "  Install:         http://localhost:3001/install"
 fi
 echo ""
 echo "Default Login Credentials:"
@@ -204,15 +315,19 @@ echo ""
 echo "Opening browser in 3 seconds..."
 sleep 3
 
-# Try to open browser
-if command -v xdg-open &> /dev/null; then
-    xdg-open http://localhost:3000 &>/dev/null &
-elif command -v open &> /dev/null; then
-    open http://localhost:3000 &>/dev/null &
-elif command -v sensible-browser &> /dev/null; then
-    sensible-browser http://localhost:3000 &>/dev/null &
+# Try to open browser (skip on headless/SSH)
+if [ -t 0 ] && [ -n "$DISPLAY" ] 2>/dev/null; then
+    if command -v xdg-open &> /dev/null; then
+        xdg-open http://localhost:3001 &>/dev/null &
+    elif command -v open &> /dev/null; then
+        open http://localhost:3001 &>/dev/null &
+    elif command -v sensible-browser &> /dev/null; then
+        sensible-browser http://localhost:3001 &>/dev/null &
+    else
+        echo "Open in browser: http://localhost:3001"
+    fi
 else
-    echo "Could not auto-open browser. Please navigate to http://localhost:3000"
+    echo "Open in browser: http://localhost:3001 (or https://swiftnexus.org if production)"
 fi
 
 echo ""
