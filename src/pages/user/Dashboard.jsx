@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Layout from '../../components/Layout'
 import UserLanding from './Landing'
-import UserDashboard from './UserDashboard'
+import UserDashboardInner from './UserDashboard'
 import Profile from './Profile'
 import BalanceDashboard from './BalanceDashboard'
 import TwoFactorAuth from './TwoFactorAuth'
@@ -37,7 +37,7 @@ const UserDashboard = ({ user, onLogout }) => {
     <Layout user={user} onLogout={onLogout} role="user">
       <Routes>
         <Route index element={<UserLanding />} />
-        <Route path="dashboard" element={<UserDashboard user={user} onLogout={onLogout} />} />
+        <Route path="dashboard" element={<UserDashboardInner user={user} onLogout={onLogout} />} />
         <Route path="profile" element={<Profile />} />
         <Route path="balance" element={<BalanceDashboard />} />
         <Route path="2fa" element={<TwoFactorAuth />} />
