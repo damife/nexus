@@ -1,109 +1,84 @@
 #!/bin/bash
 
-# Setup Nginx for SwiftNexus Enterprise with Clean URLs
-# Usage: ./nginxsetup.sh [development|production]
-# Default: development
+# Setup Nginx for SwiftNexus Enterprise
+# Uses nginx.conf (pure reverse proxy: frontend 3001, backend 5000)
+# Usage: sudo ./nginxsetup.sh
+#
+# Prerequisites:
+#   - SSL certs at /etc/letsencrypt/live/swiftnexus.org/ (for production HTTPS)
+#   - Or modify nginx.conf for HTTP-only if no SSL
 
-echo "🚀 Setting up Nginx for SwiftNexus Enterprise..."
+set -e
 
-# Get environment mode
-MODE="${1:-development}"
-echo "Installation Mode: $MODE"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NGINX_CONF="$SCRIPT_DIR/nginx.conf"
+SITE_NAME="swiftnexus"
+SITES_AVAILABLE="/etc/nginx/sites-available/$SITE_NAME"
+SITES_ENABLED="/etc/nginx/sites-enabled/$SITE_NAME"
+
+echo "SwiftNexus Enterprise - Nginx Setup"
+echo "=================================="
 echo ""
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
-    echo "❌ This script must be run as root (use sudo)"
+    echo "This script must be run as root (use sudo)"
+    exit 1
+fi
+
+# Verify nginx.conf exists
+if [ ! -f "$NGINX_CONF" ]; then
+    echo "Error: nginx.conf not found at $NGINX_CONF"
     exit 1
 fi
 
 # Install Nginx if not installed
 if ! command -v nginx &> /dev/null; then
-    echo "📦 Installing Nginx..."
-    apt update
-    apt install -y nginx
+    echo "Installing Nginx..."
+    apt-get update
+    apt-get install -y nginx
 else
-    echo "✅ Nginx is already installed"
+    echo "Nginx is already installed"
 fi
 
-# Create sites-available directory if it doesn't exist
+# Ensure sites-available exists
 mkdir -p /etc/nginx/sites-available
+mkdir -p /etc/nginx/sites-enabled
 
-# Copy our Nginx configuration
-echo "📝 Copying Nginx configuration..."
-if [ "$MODE" = "production" ]; then
-    # Production configuration
-    sed "s|/var/www/swiftnexus|/var/www/swiftnexus|g" /c/xamppp/htdocs/3rdparty/cleanurls.conf > /etc/nginx/sites-available/swiftnexus
-    sed -i 's|localhost:3000|localhost:3000|g' /etc/nginx/sites-available/swiftnexus
-    sed -i 's|localhost:5000|localhost:5000|g' /etc/nginx/sites-available/swiftnexus
-    sed -i 's|yourdomain.com|yourdomain.com|g' /etc/nginx/sites-available/swiftnexus
-else
-    # Development configuration
-    sed "s|/var/www/swiftnexus|/c/xamppp/htdocs/3rdparty|g" /c/xamppp/htdocs/3rdparty/cleanurls.conf > /etc/nginx/sites-available/swiftnexus
-    sed -i 's|localhost:3000|localhost:3000|g' /etc/nginx/sites-available/swiftnexus
-    sed -i 's|localhost:5000|localhost:5000|g' /etc/nginx/sites-available/swiftnexus
-fi
+# Copy nginx.conf to sites-available
+echo "Copying nginx.conf to /etc/nginx/sites-available/$SITE_NAME..."
+cp "$NGINX_CONF" "$SITES_AVAILABLE"
 
 # Remove default site if it exists
 if [ -f /etc/nginx/sites-enabled/default ]; then
-    rm /etc/nginx/sites-enabled/default
+    echo "Removing default site..."
+    rm -f /etc/nginx/sites-enabled/default
 fi
 
-# Enable our site
-echo "🔗 Enabling SwiftNexus site..."
-ln -s /etc/nginx/sites-available/swiftnexus /etc/nginx/sites-enabled/
+# Enable our site (symlink)
+echo "Enabling SwiftNexus site..."
+ln -sf "$SITES_AVAILABLE" "$SITES_ENABLED"
 
 # Test Nginx configuration
-echo "🧪 Testing Nginx configuration..."
-nginx -t
-
-if [ $? -eq 0 ]; then
-    echo "✅ Nginx configuration is valid"
-    
-    # Reload Nginx
-    echo "🔄 Reloading Nginx..."
+echo "Testing Nginx configuration..."
+if nginx -t 2>/dev/null; then
+    echo "Nginx configuration is valid"
+    echo "Reloading Nginx..."
     systemctl reload nginx
-    
-    if [ $? -eq 0 ]; then
-        echo "✅ Nginx reloaded successfully"
-        echo "🎯 Clean URLs are now active!"
-        echo ""
-        echo "📋 Test these URLs:"
-        if [ "$MODE" = "production" ]; then
-            echo "   http://yourdomain.com/ - Homepage"
-            echo "   http://yourdomain.com/careers - Careers page"
-            echo "   http://yourdomain.com/news - News page"
-            echo "   http://yourdomain.com/contact - Contact page"
-            echo "   http://yourdomain.com/login - React login"
-            echo "   https://yourdomain.com/admin - Admin dashboard"
-        else
-            echo "   http://localhost/ - Homepage"
-            echo "   http://localhost/careers - Careers page"
-            echo "   http://localhost/news - News page"
-            echo "   http://localhost/contact - Contact page"
-            echo "   http://localhost/login - React login"
-            echo "   http://localhost/admin - Admin dashboard"
-        fi
-        echo ""
-        echo "🚀 Your clean URLs are ready!"
-        echo ""
-        echo "🔧 Configuration file: /etc/nginx/sites-available/swiftnexus"
-        echo "🔗 Enabled site: /etc/nginx/sites-enabled/swiftnexus"
-        echo "📊 Status: nginx -t && systemctl status nginx"
-        echo ""
-        echo "🎯 Mode: $MODE"
-    else
-        echo "❌ Failed to reload Nginx"
-        exit 1
-    fi
+    echo ""
+    echo "Nginx setup complete!"
+    echo ""
+    echo "Configuration: $SITES_AVAILABLE"
+    echo "Enabled:       $SITES_ENABLED"
+    echo ""
+    echo "URLs (with SSL):"
+    echo "  Site:   https://swiftnexus.org"
+    echo "  Admin:  https://swiftnexus.org/swiftadmin/admin/dashboard"
+    echo "  Login:  https://swiftnexus.org/pages/login"
+    echo "  Install: https://swiftnexus.org/install"
+    echo ""
+    echo "Ensure backend (5000) and frontend (3001) are running: ./start.sh production background"
 else
-    echo "❌ Nginx configuration has errors"
-    echo "Please check the configuration and try again."
+    echo "Nginx configuration has errors. Fix before reloading."
     exit 1
 fi
-
-echo ""
-echo "✅ Nginx setup complete!"
-echo "📁 Configuration file: /etc/nginx/sites-available/swiftnexus"
-echo "🔗 Enabled site: /etc/nginx/sites-enabled/swiftnexus"
-echo "📊 Status: nginx -t && systemctl status nginx"

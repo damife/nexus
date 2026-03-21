@@ -2,10 +2,12 @@
 
 # SwiftNexus Enterprise - Startup Script for Linux/macOS
 #
-# Usage: ./start.sh [development|production]
-# Default: development
+# Usage: ./start.sh [development|production] [background]
+#   development|production - Run mode (default: development)
+#   background|daemon      - Run in background (survives SSH disconnect)
+# Example: ./start.sh production background
 #
-# Ports (must match nginx-pure-proxy.conf):
+# Ports (must match nginx.conf):
 #   - Backend:  5000 (API, /secure/secure.js, SPA fallback for /install, /swiftadmin, etc.)
 #   - Frontend: 3001 (Vite dev server - marketing pages, static assets)
 #
@@ -20,8 +22,22 @@ echo " SwiftNexus Enterprise - Enhanced Start"
 echo "========================================"
 echo ""
 
-# Get environment mode
+# Get environment mode and optional background flag
 MODE="${1:-development}"
+BACKGROUND="${2:-}"
+
+# If "background" or "daemon" requested, re-exec under nohup and exit
+if [ "$BACKGROUND" = "background" ] || [ "$BACKGROUND" = "daemon" ]; then
+    LOG_FILE="${START_SH_LOG:-swiftnexus.log}"
+    echo "Starting SwiftNexus in background (mode: $MODE)..."
+    nohup "$0" "$MODE" </dev/null >> "$LOG_FILE" 2>&1 &
+    DAEMON_PID=$!
+    echo -e "${GREEN}SwiftNexus started in background. PID: $DAEMON_PID${NC}"
+    echo "Log file: $LOG_FILE"
+    echo "To stop: pkill -f 'node server.js'; pkill -f 'vite'"
+    exit 0
+fi
+
 echo "Starting Mode: $MODE"
 echo ""
 
@@ -77,13 +93,9 @@ fi
 # Check if .env file exists
 if [ ! -f "server/.env" ]; then
     echo -e "${YELLOW}[WARNING]${NC} server/.env file not found!"
-    echo "Creating default .env from server/.env.example..."
-    if [ -f "server/.env.example" ]; then
-        cp server/.env.example server/.env
-        echo -e "${YELLOW}Please edit server/.env and set DB_PASSWORD, JWT_SECRET, and other required values.${NC}"
-    else
-        [ "$MODE" = "production" ] && CORS_VAL="https://swiftnexus.org" || CORS_VAL="http://localhost:3001"
-        cat > server/.env << EOF
+    echo "Creating default .env..."
+    [ "$MODE" = "production" ] && CORS_VAL="https://swiftnexus.org" || CORS_VAL="http://localhost:3001"
+    cat > server/.env << EOF
 # Server Configuration
 PORT=5000
 NODE_ENV=$MODE
@@ -105,8 +117,7 @@ CORS_ORIGIN=$CORS_VAL
 BCRYPT_ROUNDS=10
 JWT_EXPIRES_IN=24h
 EOF
-        echo -e "${YELLOW}Please edit server/.env and set DB_PASSWORD, JWT_SECRET, and other required values.${NC}"
-    fi
+    echo -e "${YELLOW}Please edit server/.env and set DB_PASSWORD, JWT_SECRET, and other required values.${NC}"
     echo -e "${GREEN}.env file created.${NC}"
     echo ""
 else
@@ -236,10 +247,15 @@ resolve_port_conflict() {
 
 # Production: install deps and build frontend so backend can serve React app at /install, /swiftadmin
 if [ "$MODE" = "production" ]; then
-    echo -e "${BLUE}[4/5]${NC} Ensuring frontend dependencies (npm install)..."
+    echo -e "${BLUE}[4/5]${NC} Ensuring frontend and backend dependencies..."
     npm install
     if [ $? -ne 0 ]; then
-        echo -e "${RED}ERROR: npm install failed!${NC}"
+        echo -e "${RED}ERROR: Frontend npm install failed!${NC}"
+        exit 1
+    fi
+    (cd server && npm install)
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}ERROR: Backend npm install failed!${NC}"
         exit 1
     fi
     echo -e "${BLUE}Building frontend (required for /install, /swiftadmin)...${NC}"

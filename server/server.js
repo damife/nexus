@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -91,7 +92,6 @@ app.use(express.urlencoded({ extended: true }));
 // Use dist/app.html if built, else fallback to root index (for dev without build)
 const distAppPath = path.join(__dirname, '..', 'dist', 'app.html');
 const rootIndexPath = path.join(__dirname, '..', 'index.html');
-const fs = require('fs');
 
 app.get(/^\/(admin|user|install|swiftadmin)(\/.*)?$/, (req, res) => {
   const appPath = fs.existsSync(distAppPath) ? distAppPath : rootIndexPath;
@@ -140,9 +140,6 @@ app.use('/api/applications', checkInstallation, applicationsRoutes);
 
 // Serve secure login script with proper security headers
 app.get('/secure/secure.js', (req, res) => {
-  const path = require('path');
-  const fs = require('fs');
-  
   const secureJsPath = path.join(__dirname, 'config', 'secure.js');
   
   // Check if file exists

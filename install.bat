@@ -240,8 +240,7 @@ echo.
 echo Useful commands:
 echo   start.bat development - Start development environment
 echo   start.bat production  - Start production environment
-echo   check-status.bat    - Check application status
 echo.
-echo For more information, see SETUP.md
+echo For more information, see SCRIPT_USAGE_GUIDE.md
 echo.
 pause

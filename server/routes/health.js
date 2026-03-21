@@ -40,7 +40,31 @@ router.get('/health', async (req, res) => {
 });
 
 /**
- * Comprehensive health check endpoint
+ * Comprehensive health check endpoint (alias for admin UI)
+ * GET /api/health/detailed
+ */
+router.get('/detailed', async (req, res) => {
+  try {
+    const health = await getDetailedHealth();
+
+    const statusCode = health.status === 'healthy' ? 200 : 503;
+
+    res.status(statusCode).json({
+      success: health.status === 'healthy',
+      data: health
+    });
+  } catch (error) {
+    logger.error('Detailed health check failed:', error);
+    res.status(503).json({
+      success: false,
+      error: 'Detailed health check failed',
+      message: error.message
+    });
+  }
+});
+
+/**
+ * Comprehensive health check endpoint (legacy path)
  */
 router.get('/health/detailed', async (req, res) => {
   try {

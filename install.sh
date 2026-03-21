@@ -185,7 +185,8 @@ echo ""
 # Set permissions
 echo "Setting permissions..."
 chmod +x start.sh 2>/dev/null || true
-chmod +x check-status.sh 2>/dev/null || true
+chmod +x checkStatus.sh 2>/dev/null || true
+chmod +x healthCheck.sh 2>/dev/null || true
 chmod 755 server/logs 2>/dev/null || true
 chmod 755 uploads 2>/dev/null || true
 echo -e "${GREEN}[OK]${NC} Permissions set"
@@ -248,7 +249,8 @@ echo ""
 echo "Useful commands:"
 echo "  ./start.sh development - Start development environment"
 echo "  ./start.sh production  - Start production environment"
-echo "  ./check-status.sh  - Check application status"
+echo "  ./checkStatus.sh  - Check application status"
+echo "  ./healthCheck.sh  - Full server & file health check"
 echo ""
-echo "For more information, see SETUP.md"
+echo "For more information, see SCRIPT_USAGE_GUIDE.md"
 echo ""
